@@ -1,8 +1,9 @@
+import random
+import time
+
 import pytest
 
 from quickpool import quickpool
-import time
-import random
 
 
 def test__get_submissions():

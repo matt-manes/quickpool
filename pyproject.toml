@@ -7,7 +7,7 @@ name = "quickpool"
 description = "Use ProcessPoolExecutor and ThreadPoolExecutor from concurrent.futures with a progress bar and less boilerplate."
 version = "0.0.0"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["printbuddies", "pytest"]
 readme = "README.md"
 keywords = ["multithread", "multiprocess", "concurrent", "futures"]
 classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent"]
