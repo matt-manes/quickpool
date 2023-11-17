@@ -87,6 +87,24 @@ def test__thread_pool_all_workers_kwargs():
         assert result == i
 
 
+def test__update_and_wait():
+    class Funcy:
+        def __init__(self):
+            self.count = 0
+
+        def do(self) -> int:
+            while self.count < 10:
+                self.count += 1
+                time.sleep(0.5)
+            return self.count
+
+    funcy = Funcy()
+    assert (
+        quickpool.update_and_wait(funcy.do, lambda: f"The count is: {funcy.count}")
+        == 10
+    )
+
+
 def main():
     """Process pool executor requires that it be used in a "__main__" block.
     So this test needs to be run manually after installing this package as an editable install:

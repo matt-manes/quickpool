@@ -2,7 +2,8 @@ import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, _base
 from typing import Any, Callable
 
-from printbuddies import ProgBar
+from printbuddies import ProgBar, print_in_place
+from noiftimer import Timer
 
 
 class _QuickPool:
@@ -107,7 +108,7 @@ class _QuickPool:
                         )
                     ) < num_workers:
                         bar.display(
-                            f"{prefix+' ' if prefix else ''}{bar.runtime}",
+                            f"{prefix+' '}{bar.runtime}".strip(),  # Remove the space if prefix is an empty string
                             counter_override=num_complete,
                             suffix=suffix,
                         )
@@ -126,3 +127,44 @@ class ThreadPool(_QuickPool):
     @property
     def executor(self) -> ThreadPoolExecutor:
         return ThreadPoolExecutor(self.max_workers)
+
+
+def update_and_wait(
+    function: Callable[..., Any],
+    message: str | Callable[[], Any] = "",
+    *args,
+    **kwargs,
+) -> Any:
+    """While `function` runs with `*args` and `**kwargs`,
+    print out an optional `message` (a runtime clock will be appended to `message`) at 1 second intervals.
+
+    Returns the output of `function`.
+
+    >>> def main():
+    >>>   def trash(n1: int, n2: int) -> int:
+    >>>      time.sleep(10)
+    >>>      return n1 + n2
+    >>>   val = update_and_wait(trash, "Waiting on trash", 10, 22)
+    >>>   print(val)
+    >>> main()
+    >>> Waiting on trash | runtime: 9s 993ms 462us
+    >>> 32"""
+
+    timer = Timer().start()
+
+    def update():
+        if isinstance(message, str):
+            display_message = f"{message} |"
+        else:
+            display_message = f"{message()} |"
+        print_in_place(
+            f"{display_message} runtime: {timer.elapsed_str}".strip(), True
+        )  # Remove the space if display_message is an empty string
+        time.sleep(1)
+
+    with ThreadPoolExecutor() as pool:
+        worker = pool.submit(function, *args, **kwargs)
+        while not worker.done():
+            update()
+    print()
+    return worker.result()
