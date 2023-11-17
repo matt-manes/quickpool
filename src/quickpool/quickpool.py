@@ -73,7 +73,11 @@ class _QuickPool:
         ]
 
     def execute(
-        self, show_progbar: bool = True, progbar_update_period: float = 0.001
+        self,
+        show_progbar: bool = True,
+        prefix: str = "",
+        suffix: str = "",
+        progbar_update_period: float = 0.001,
     ) -> list[Any]:
         """Execute the supplied functions with their arguments, if any.
 
@@ -83,7 +87,12 @@ class _QuickPool:
 
         `show_progbar`: If `True`, print a progress bar to the terminal showing how many functions have finished executing.
 
-        `progbar_update_period`: How often, in seconds, to check the number of completed functions. Only relevant if `show_progbar` is `True`."""
+        `prefix`: String to display at the front of the progbar (will always include a runtime clock).
+
+        `suffix`: String to display after the progbar.
+
+        `progbar_update_period`: How often, in seconds, to check the number of completed functions. Only relevant if `show_progbar` is `True`.
+        """
         with self.executor as executor:
             workers = [
                 executor.submit(submission[0], *submission[1], **submission[2])
@@ -97,8 +106,11 @@ class _QuickPool:
                             [worker for worker in workers if worker.done()]
                         )
                     ) < num_workers:
-
-                        bar.display(f"{bar.runtime}", counter_override=num_complete)
+                        bar.display(
+                            f"{prefix+' ' if prefix else ''}{bar.runtime}",
+                            counter_override=num_complete,
+                            suffix=suffix,
+                        )
                         time.sleep(progbar_update_period)
                     bar.display(f"{bar.runtime}", counter_override=num_complete)
             return [worker.result() for worker in workers]
