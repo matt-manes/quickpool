@@ -2,8 +2,8 @@ import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, _base
 from typing import Any, Callable
 
-from printbuddies import ProgBar, print_in_place
 from noiftimer import Timer
+from printbuddies import ProgBar, print_in_place
 
 
 class _QuickPool:
