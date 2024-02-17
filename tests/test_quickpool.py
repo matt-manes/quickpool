@@ -1,17 +1,16 @@
 import random
 import time
 
-import pytest
+from typing import Any, Callable
 
 from quickpool import quickpool
 
 
 def test__get_submissions():
-    def dummy(*args, **kwargs):
-        ...
+    def dummy(*args: Any, **kwargs: Any): ...
 
     num = 5
-    pool = quickpool._QuickPool(
+    pool = quickpool._QuickPool(  # type: ignore
         [dummy] * num, [(i, 2 * i) for i in range(5)], [{"i": i} for i in range(5)]
     )
     for i, submission in enumerate(pool.submissions):
@@ -49,15 +48,7 @@ def get_threadpool_kwargs() -> quickpool.ThreadPool:
 def test__thread_pool_all_workers_args():
     pool = get_threadpool_args()
     print()
-    results = pool.execute()
-    for i, result in zip(range(len(pool.functions)), results):
-        assert result == i
-
-
-def test__thread_pool_all_workers_args_low_poll_rate():
-    pool = get_threadpool_args()
-    print()
-    results = pool.execute(progbar_update_period=0.25)
+    results = pool.execute(prefix="test all workers args")
     for i, result in zip(range(len(pool.functions)), results):
         assert result == i
 
@@ -66,7 +57,7 @@ def test__thread_pool_all_workers_args_limit_workers():
     pool = get_threadpool_args()
     pool.max_workers = 1
     print()
-    results = pool.execute()
+    results = pool.execute(prefix="test all workers args limit workers")
     for i, result in zip(range(len(pool.functions)), results):
         assert result == i
 
@@ -74,17 +65,26 @@ def test__thread_pool_all_workers_args_limit_workers():
 def test__thread_pool_all_workers_args_no_bar():
     pool = get_threadpool_args()
     print()
+    print("No bar display start")
     results = pool.execute(False)
     for i, result in zip(range(len(pool.functions)), results):
         assert result == i
+    print("No bar display stop")
 
 
 def test__thread_pool_all_workers_kwargs():
     pool = get_threadpool_kwargs()
     print()
-    results = pool.execute()
+    results = pool.execute(prefix="test all workers kwargs")
     for i, result in zip(range(len(pool.functions)), results):
         assert result == i
+
+
+def test__thread_pool_dynamic_prefix():
+    prefix: Callable[[], int] = lambda: random.randint(0, 100000)
+    pool = get_threadpool_args()
+    print()
+    results = pool.execute(prefix=prefix)
 
 
 def test__update_and_wait():
