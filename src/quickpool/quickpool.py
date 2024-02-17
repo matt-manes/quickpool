@@ -1,9 +1,9 @@
 import time
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, _base
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from typing import Any, Callable
 
+import printbuddies
 from noiftimer import Timer
-from printbuddies import ProgBar, print_in_place
 
 
 class _QuickPool:
@@ -52,11 +52,13 @@ class _QuickPool:
         self.max_workers = max_workers
 
     @property
-    def executor(self) -> _base.Executor:
+    def executor(self) -> Any:
         raise NotImplementedError
 
     @property
-    def submissions(self) -> list:
+    def submissions(
+        self,
+    ) -> list[tuple[Callable[..., Any], tuple[Any, ...], dict[str, Any]]]:
         num_functions = len(self.functions)
         num_args = len(self.args_list)
         num_kwargs = len(self.kwargs_list)
@@ -74,11 +76,7 @@ class _QuickPool:
         ]
 
     def execute(
-        self,
-        show_progbar: bool = True,
-        prefix: str = "",
-        suffix: str = "",
-        progbar_update_period: float = 0.001,
+        self, show_progbar: bool = True, prefix: str | Callable[[], Any] = ""
     ) -> list[Any]:
         """Execute the supplied functions with their arguments, if any.
 
@@ -101,19 +99,20 @@ class _QuickPool:
             ]
             if show_progbar:
                 num_workers = len(workers)
-                with ProgBar(num_workers) as bar:
-                    while (
-                        num_complete := len(
-                            [worker for worker in workers if worker.done()]
+                with printbuddies.Progress(disable=not show_progbar) as progress:
+                    pool = progress.add_task(f"{prefix}", total=num_workers)
+                    while not progress.finished:
+                        progress.update(
+                            pool,
+                            completed=len(
+                                [worker for worker in workers if worker.done()]
+                            ),
+                            description=(
+                                str(prefix())
+                                if isinstance(prefix, Callable)
+                                else prefix
+                            ),
                         )
-                    ) < num_workers:
-                        bar.display(
-                            f"{prefix+' '}{bar.runtime}".strip(),  # Remove the space if prefix is an empty string
-                            counter_override=num_complete,
-                            suffix=suffix,
-                        )
-                        time.sleep(progbar_update_period)
-                    bar.display(f"{bar.runtime}", counter_override=num_complete)
             return [worker.result() for worker in workers]
 
 
@@ -132,8 +131,8 @@ class ThreadPool(_QuickPool):
 def update_and_wait(
     function: Callable[..., Any],
     message: str | Callable[[], Any] = "",
-    *args,
-    **kwargs,
+    *args: Any,
+    **kwargs: Any,
 ) -> Any:
     """While `function` runs with `*args` and `**kwargs`,
     print out an optional `message` (a runtime clock will be appended to `message`) at 1 second intervals.
@@ -157,8 +156,10 @@ def update_and_wait(
             display_message = f"{message} |"
         else:
             display_message = f"{message()} |"
-        print_in_place(
-            f"{display_message} runtime: {timer.elapsed_str}".strip(), True
+        printbuddies.print_in_place(
+            f"{display_message} runtime: {timer.elapsed_str}".strip(),
+            True,
+            truncate=False,
         )  # Remove the space if display_message is an empty string
         time.sleep(1)
 
