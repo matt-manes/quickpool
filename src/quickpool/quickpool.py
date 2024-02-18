@@ -1,7 +1,7 @@
 import time
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, Future
+from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import Any, Callable, Sequence, Mapping
+from typing import Any, Callable, Mapping, Sequence
 
 import printbuddies
 from noiftimer import Timer

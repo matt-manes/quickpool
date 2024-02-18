@@ -18,17 +18,26 @@
         <input id="togglestate" type="checkbox" aria-hidden="true" tabindex="-1">
         <div>
 
-            <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
-                   pattern=".+" required>
 
 
-        <h2>Submodules</h2>
-        <ul>
-                <li><a href="quickpool/quickpool.html">quickpool</a></li>
-        </ul>
 
         <h2>API Documentation</h2>
             <ul class="memberlist">
+            <li>
+                    <a class="class" href="#ProcessPool">ProcessPool</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ThreadPool">ThreadPool</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
+            <li>
+                    <a class="function" href="#update_and_wait">update_and_wait</a>
+            </li>
     </ul>
 
 
@@ -52,192 +61,162 @@ quickpool    </h1>
 
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">from</span> <span class="nn">.quickpool</span> <span class="kn">import</span> <span class="n">ProcessPool</span><span class="p">,</span> <span class="n">ThreadPool</span><span class="p">,</span> <span class="n">update_and_wait</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1.1&quot;</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">4</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ProcessPool&quot;</span><span class="p">,</span> <span class="s2">&quot;ThreadPool&quot;</span><span class="p">,</span> <span class="s2">&quot;update_and_wait&quot;</span><span class="p">]</span>
 </span></pre></div>
 
 
             </section>
+                <section id="ProcessPool">
+                            <input id="ProcessPool-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ProcessPool</span><wbr>(<span class="base">quickpool.quickpool._QuickPool</span>):
+
+                <label class="view-source-button" for="ProcessPool-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ProcessPool"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ProcessPool-166"><a href="#ProcessPool-166"><span class="linenos">166</span></a><span class="k">class</span> <span class="nc">ProcessPool</span><span class="p">(</span><span class="n">_QuickPool</span><span class="p">):</span>
+</span><span id="ProcessPool-167"><a href="#ProcessPool-167"><span class="linenos">167</span></a>    <span class="nd">@property</span>
+</span><span id="ProcessPool-168"><a href="#ProcessPool-168"><span class="linenos">168</span></a>    <span class="k">def</span> <span class="nf">executor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProcessPoolExecutor</span><span class="p">:</span>
+</span><span id="ProcessPool-169"><a href="#ProcessPool-169"><span class="linenos">169</span></a>        <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>quickpool.quickpool._QuickPool</dt>
+                                <dd id="ProcessPool.__init__" class="function">_QuickPool</dd>
+                <dd id="ProcessPool.get_num_workers" class="function">get_num_workers</dd>
+                <dd id="ProcessPool.get_finished_workers" class="function">get_finished_workers</dd>
+                <dd id="ProcessPool.get_num_finished_wokers" class="function">get_num_finished_wokers</dd>
+                <dd id="ProcessPool.get_results" class="function">get_results</dd>
+                <dd id="ProcessPool.get_unfinished_workers" class="function">get_unfinished_workers</dd>
+                <dd id="ProcessPool.get_num_unfinished_workers" class="function">get_num_unfinished_workers</dd>
+                <dd id="ProcessPool.execute" class="function">execute</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="ThreadPool">
+                            <input id="ThreadPool-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ThreadPool</span><wbr>(<span class="base">quickpool.quickpool._QuickPool</span>):
+
+                <label class="view-source-button" for="ThreadPool-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ThreadPool"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadPool-172"><a href="#ThreadPool-172"><span class="linenos">172</span></a><span class="k">class</span> <span class="nc">ThreadPool</span><span class="p">(</span><span class="n">_QuickPool</span><span class="p">):</span>
+</span><span id="ThreadPool-173"><a href="#ThreadPool-173"><span class="linenos">173</span></a>    <span class="nd">@property</span>
+</span><span id="ThreadPool-174"><a href="#ThreadPool-174"><span class="linenos">174</span></a>    <span class="k">def</span> <span class="nf">executor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ThreadPoolExecutor</span><span class="p">:</span>
+</span><span id="ThreadPool-175"><a href="#ThreadPool-175"><span class="linenos">175</span></a>        <span class="k">return</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt>quickpool.quickpool._QuickPool</dt>
+                                <dd id="ThreadPool.__init__" class="function">_QuickPool</dd>
+                <dd id="ThreadPool.get_num_workers" class="function">get_num_workers</dd>
+                <dd id="ThreadPool.get_finished_workers" class="function">get_finished_workers</dd>
+                <dd id="ThreadPool.get_num_finished_wokers" class="function">get_num_finished_wokers</dd>
+                <dd id="ThreadPool.get_results" class="function">get_results</dd>
+                <dd id="ThreadPool.get_unfinished_workers" class="function">get_unfinished_workers</dd>
+                <dd id="ThreadPool.get_num_unfinished_workers" class="function">get_num_unfinished_workers</dd>
+                <dd id="ThreadPool.execute" class="function">execute</dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="update_and_wait">
+                            <input id="update_and_wait-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">update_and_wait</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>,</span><span class="param">	<span class="n">message</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>,</span><span class="param">	<span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span>,</span><span class="param">	<span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></span><span class="return-annotation">) -> <span class="n">Any</span>:</span></span>
+
+                <label class="view-source-button" for="update_and_wait-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#update_and_wait"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="update_and_wait-178"><a href="#update_and_wait-178"><span class="linenos">178</span></a><span class="k">def</span> <span class="nf">update_and_wait</span><span class="p">(</span>
+</span><span id="update_and_wait-179"><a href="#update_and_wait-179"><span class="linenos">179</span></a>    <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+</span><span id="update_and_wait-180"><a href="#update_and_wait-180"><span class="linenos">180</span></a>    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="update_and_wait-181"><a href="#update_and_wait-181"><span class="linenos">181</span></a>    <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="update_and_wait-182"><a href="#update_and_wait-182"><span class="linenos">182</span></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="update_and_wait-183"><a href="#update_and_wait-183"><span class="linenos">183</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="update_and_wait-184"><a href="#update_and_wait-184"><span class="linenos">184</span></a>    <span class="sd">&quot;&quot;&quot;While `function` runs with `*args` and `**kwargs`,</span>
+</span><span id="update_and_wait-185"><a href="#update_and_wait-185"><span class="linenos">185</span></a><span class="sd">    print out an optional `message` (a runtime clock will be appended to `message`) at 1 second intervals.</span>
+</span><span id="update_and_wait-186"><a href="#update_and_wait-186"><span class="linenos">186</span></a>
+</span><span id="update_and_wait-187"><a href="#update_and_wait-187"><span class="linenos">187</span></a><span class="sd">    Returns the output of `function`.</span>
+</span><span id="update_and_wait-188"><a href="#update_and_wait-188"><span class="linenos">188</span></a>
+</span><span id="update_and_wait-189"><a href="#update_and_wait-189"><span class="linenos">189</span></a><span class="sd">    &gt;&gt;&gt; def main():</span>
+</span><span id="update_and_wait-190"><a href="#update_and_wait-190"><span class="linenos">190</span></a><span class="sd">    &gt;&gt;&gt;   def trash(n1: int, n2: int) -&gt; int:</span>
+</span><span id="update_and_wait-191"><a href="#update_and_wait-191"><span class="linenos">191</span></a><span class="sd">    &gt;&gt;&gt;      time.sleep(10)</span>
+</span><span id="update_and_wait-192"><a href="#update_and_wait-192"><span class="linenos">192</span></a><span class="sd">    &gt;&gt;&gt;      return n1 + n2</span>
+</span><span id="update_and_wait-193"><a href="#update_and_wait-193"><span class="linenos">193</span></a><span class="sd">    &gt;&gt;&gt;   val = update_and_wait(trash, &quot;Waiting on trash&quot;, 10, 22)</span>
+</span><span id="update_and_wait-194"><a href="#update_and_wait-194"><span class="linenos">194</span></a><span class="sd">    &gt;&gt;&gt;   print(val)</span>
+</span><span id="update_and_wait-195"><a href="#update_and_wait-195"><span class="linenos">195</span></a><span class="sd">    &gt;&gt;&gt; main()</span>
+</span><span id="update_and_wait-196"><a href="#update_and_wait-196"><span class="linenos">196</span></a><span class="sd">    &gt;&gt;&gt; Waiting on trash | runtime: 9s 993ms 462us</span>
+</span><span id="update_and_wait-197"><a href="#update_and_wait-197"><span class="linenos">197</span></a><span class="sd">    &gt;&gt;&gt; 32&quot;&quot;&quot;</span>
+</span><span id="update_and_wait-198"><a href="#update_and_wait-198"><span class="linenos">198</span></a>
+</span><span id="update_and_wait-199"><a href="#update_and_wait-199"><span class="linenos">199</span></a>    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="update_and_wait-200"><a href="#update_and_wait-200"><span class="linenos">200</span></a>
+</span><span id="update_and_wait-201"><a href="#update_and_wait-201"><span class="linenos">201</span></a>    <span class="k">def</span> <span class="nf">update</span><span class="p">():</span>
+</span><span id="update_and_wait-202"><a href="#update_and_wait-202"><span class="linenos">202</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="update_and_wait-203"><a href="#update_and_wait-203"><span class="linenos">203</span></a>            <span class="n">display_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2"> |&quot;</span>
+</span><span id="update_and_wait-204"><a href="#update_and_wait-204"><span class="linenos">204</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="update_and_wait-205"><a href="#update_and_wait-205"><span class="linenos">205</span></a>            <span class="n">display_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="p">()</span><span class="si">}</span><span class="s2"> |&quot;</span>
+</span><span id="update_and_wait-206"><a href="#update_and_wait-206"><span class="linenos">206</span></a>        <span class="n">printbuddies</span><span class="o">.</span><span class="n">print_in_place</span><span class="p">(</span>
+</span><span id="update_and_wait-207"><a href="#update_and_wait-207"><span class="linenos">207</span></a>            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">display_message</span><span class="si">}</span><span class="s2"> runtime: </span><span class="si">{</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsed_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+</span><span id="update_and_wait-208"><a href="#update_and_wait-208"><span class="linenos">208</span></a>            <span class="kc">True</span><span class="p">,</span>
+</span><span id="update_and_wait-209"><a href="#update_and_wait-209"><span class="linenos">209</span></a>            <span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="update_and_wait-210"><a href="#update_and_wait-210"><span class="linenos">210</span></a>        <span class="p">)</span>  <span class="c1"># Remove the space if display_message is an empty string</span>
+</span><span id="update_and_wait-211"><a href="#update_and_wait-211"><span class="linenos">211</span></a>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="update_and_wait-212"><a href="#update_and_wait-212"><span class="linenos">212</span></a>
+</span><span id="update_and_wait-213"><a href="#update_and_wait-213"><span class="linenos">213</span></a>    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+</span><span id="update_and_wait-214"><a href="#update_and_wait-214"><span class="linenos">214</span></a>        <span class="n">worker</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="update_and_wait-215"><a href="#update_and_wait-215"><span class="linenos">215</span></a>        <span class="k">while</span> <span class="ow">not</span> <span class="n">worker</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+</span><span id="update_and_wait-216"><a href="#update_and_wait-216"><span class="linenos">216</span></a>            <span class="n">update</span><span class="p">()</span>
+</span><span id="update_and_wait-217"><a href="#update_and_wait-217"><span class="linenos">217</span></a>    <span class="nb">print</span><span class="p">()</span>
+</span><span id="update_and_wait-218"><a href="#update_and_wait-218"><span class="linenos">218</span></a>    <span class="k">return</span> <span class="n">worker</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>While <code>function</code> runs with <code>*args</code> and <code>**kwargs</code>,
+print out an optional <code>message</code> (a runtime clock will be appended to <code>message</code>) at 1 second intervals.</p>
+
+<p>Returns the output of <code>function</code>.</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="k">def</span> <span class="nf">trash</span><span class="p">(</span><span class="n">n1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="k">return</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">val</span> <span class="o">=</span> <span class="n">update_and_wait</span><span class="p">(</span><span class="n">trash</span><span class="p">,</span> <span class="s2">&quot;Waiting on trash&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="nb">print</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">main</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Waiting</span> <span class="n">on</span> <span class="n">trash</span> <span class="o">|</span> <span class="n">runtime</span><span class="p">:</span> <span class="mi">9</span><span class="n">s</span> <span class="mi">993</span><span class="n">ms</span> <span class="mi">462</span><span class="n">us</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">32</span>
+</code></pre>
+</div>
+</div>
+
+
+                </section>
     </main>
-<script>
-    function escapeHTML(html) {
-        return document.createElement('div').appendChild(document.createTextNode(html)).parentNode.innerHTML;
-    }
-
-    const originalContent = document.querySelector("main.pdoc");
-    let currentContent = originalContent;
-
-    function setContent(innerHTML) {
-        let elem;
-        if (innerHTML) {
-            elem = document.createElement("main");
-            elem.classList.add("pdoc");
-            elem.innerHTML = innerHTML;
-        } else {
-            elem = originalContent;
-        }
-        if (currentContent !== elem) {
-            currentContent.replaceWith(elem);
-            currentContent = elem;
-        }
-    }
-
-    function getSearchTerm() {
-        return (new URL(window.location)).searchParams.get("search");
-    }
-
-    const searchBox = document.querySelector(".pdoc input[type=search]");
-    searchBox.addEventListener("input", function () {
-        let url = new URL(window.location);
-        if (searchBox.value.trim()) {
-            url.hash = "";
-            url.searchParams.set("search", searchBox.value);
-        } else {
-            url.searchParams.delete("search");
-        }
-        history.replaceState("", "", url.toString());
-        onInput();
-    });
-    window.addEventListener("popstate", onInput);
-
-
-    let search, searchErr;
-
-    async function initialize() {
-        try {
-            search = await new Promise((resolve, reject) => {
-                const script = document.createElement("script");
-                script.type = "text/javascript";
-                script.async = true;
-                script.onload = () => resolve(window.pdocSearch);
-                script.onerror = (e) => reject(e);
-                script.src = "search.js";
-                document.getElementsByTagName("head")[0].appendChild(script);
-            });
-        } catch (e) {
-            console.error("Cannot fetch pdoc search index");
-            searchErr = "Cannot fetch search index.";
-        }
-        onInput();
-
-        document.querySelector("nav.pdoc").addEventListener("click", e => {
-            if (e.target.hash) {
-                searchBox.value = "";
-                searchBox.dispatchEvent(new Event("input"));
-            }
-        });
-    }
-
-    function onInput() {
-        setContent((() => {
-            const term = getSearchTerm();
-            if (!term) {
-                return null
-            }
-            if (searchErr) {
-                return `<h3>Error: ${searchErr}</h3>`
-            }
-            if (!search) {
-                return "<h3>Searching...</h3>"
-            }
-
-            window.scrollTo({top: 0, left: 0, behavior: 'auto'});
-
-            const results = search(term);
-
-            let html;
-            if (results.length === 0) {
-                html = `No search results for '${escapeHTML(term)}'.`
-            } else {
-                html = `<h4>${results.length} search result${results.length > 1 ? "s" : ""} for '${escapeHTML(term)}'.</h4>`;
-            }
-            for (let result of results.slice(0, 10)) {
-                let doc = result.doc;
-                let url = `${doc.modulename.replaceAll(".", "/")}.html`;
-                if (doc.qualname) {
-                    url += `#${doc.qualname}`;
-                }
-
-                let heading;
-                switch (result.doc.kind) {
-                    case "function":
-                        if (doc.fullname.endsWith(".__init__")) {
-                            heading = `<span class="name">${doc.fullname.replace(/\.__init__$/, "")}</span>${doc.signature}`;
-                        } else {
-                            heading = `<span class="def">${doc.funcdef}</span> <span class="name">${doc.fullname}</span>${doc.signature}`;
-                        }
-                        break;
-                    case "class":
-                        heading = `<span class="def">class</span> <span class="name">${doc.fullname}</span>`;
-                        if (doc.bases)
-                            heading += `<wbr>(<span class="base">${doc.bases}</span>)`;
-                        heading += `:`;
-                        break;
-                    case "variable":
-                        heading = `<span class="name">${doc.fullname}</span>`;
-                        if (doc.annotation)
-                            heading += `<span class="annotation">${doc.annotation}</span>`;
-                        if (doc.default_value)
-                            heading += `<span class="default_value">${doc.default_value}</span>`;
-                        break;
-                    default:
-                        heading = `<span class="name">${doc.fullname}</span>`;
-                        break;
-                }
-                html += `
-                        <section class="search-result">
-                        <a href="${url}" class="attr ${doc.kind}">${heading}</a>
-                        <div class="docstring">${doc.doc}</div>
-                        </section>
-                    `;
-
-            }
-            return html;
-        })());
-    }
-
-    if (getSearchTerm()) {
-        initialize();
-        searchBox.value = getSearchTerm();
-        onInput();
-    } else {
-        searchBox.addEventListener("focus", initialize, {once: true});
-    }
-
-    searchBox.addEventListener("keydown", e => {
-        if (["ArrowDown", "ArrowUp", "Enter"].includes(e.key)) {
-            let focused = currentContent.querySelector(".search-result.focused");
-            if (!focused) {
-                currentContent.querySelector(".search-result").classList.add("focused");
-            } else if (
-                e.key === "ArrowDown"
-                && focused.nextElementSibling
-                && focused.nextElementSibling.classList.contains("search-result")
-            ) {
-                focused.classList.remove("focused");
-                focused.nextElementSibling.classList.add("focused");
-                focused.nextElementSibling.scrollIntoView({
-                    behavior: "smooth",
-                    block: "nearest",
-                    inline: "nearest"
-                });
-            } else if (
-                e.key === "ArrowUp"
-                && focused.previousElementSibling
-                && focused.previousElementSibling.classList.contains("search-result")
-            ) {
-                focused.classList.remove("focused");
-                focused.previousElementSibling.classList.add("focused");
-                focused.previousElementSibling.scrollIntoView({
-                    behavior: "smooth",
-                    block: "nearest",
-                    inline: "nearest"
-                });
-            } else if (
-                e.key === "Enter"
-            ) {
-                focused.querySelector("a").click();
-            }
-        }
-    });
-</script></body>
+</body>
 </html>

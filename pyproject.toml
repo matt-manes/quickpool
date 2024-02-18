@@ -1,7 +1,7 @@
 [project]
 name = "quickpool"
 description = "Use ProcessPoolExecutor and ThreadPoolExecutor from concurrent.futures with a progress bar and less boilerplate."
-version = "0.1.1"
+version = "1.0.0"
 dependencies = ["printbuddies", "pytest", "noiftimer"]
 readme = "README.md"
 keywords = ["multithread", "multiprocess", "concurrent", "futures"]
