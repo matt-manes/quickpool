@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.0 (2024-02-17)
+
+#### Refactorings
+
+* implement `Submission` dataclass
+* improve type annotation coverage
+* BREAKING change progress bar implementation and remove irrelevant args to `execute()`
+
+
 ## v0.1.1 (2023-11-17)
 
 #### Others
