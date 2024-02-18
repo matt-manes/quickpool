@@ -1,9 +1,22 @@
 import time
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-from typing import Any, Callable
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, Future
+from dataclasses import dataclass
+from typing import Any, Callable, Sequence, Mapping
 
 import printbuddies
 from noiftimer import Timer
+
+
+@dataclass
+class Submission:
+    """Class representing a submission to the executor pool.
+
+    Consists of a function to be called as well as any arguments or keyword arguments to be passed to it.
+    """
+
+    function_: Callable[..., Any]
+    args: Sequence[Any]
+    kwargs: Mapping[str, Any]
 
 
 class _QuickPool:
@@ -46,37 +59,64 @@ class _QuickPool:
         >>> results = pool.execute()
         >>> print(results)
         >>> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"""
-        self.functions = functions
-        self.args_list = args_list
-        self.kwargs_list = kwargs_list
+        self._submissions = self._prepare_submissions(functions, args_list, kwargs_list)
         self.max_workers = max_workers
+        self._workers: list[Future[Any]]
 
     @property
     def executor(self) -> Any:
         raise NotImplementedError
 
     @property
-    def submissions(
+    def submissions(self) -> list[Submission]:
+        return self._submissions
+
+    @property
+    def workers(self) -> list[Future[Any]]:
+        return self._workers
+
+    def _prepare_submissions(
         self,
-    ) -> list[tuple[Callable[..., Any], tuple[Any, ...], dict[str, Any]]]:
-        num_functions = len(self.functions)
-        num_args = len(self.args_list)
-        num_kwargs = len(self.kwargs_list)
-        functions = self.functions
-        args_list = self.args_list
-        kwargs_list = self.kwargs_list
+        functions: list[Callable[..., Any]],
+        args_list: list[tuple[Any, ...]] = [],
+        kwargs_list: list[dict[str, Any]] = [],
+    ):
+        num_functions = len(functions)
+        num_args = len(args_list)
+        num_kwargs = len(kwargs_list)
         # Pad args_list and kwargs_list if they're shorter than len(functions)
         if num_args < num_functions:
             args_list.extend([tuple() for _ in range(num_functions - num_args)])
         if num_kwargs < num_functions:
             kwargs_list.extend([dict() for _ in range(num_functions - num_kwargs)])
         return [
-            (function_, args, kwargs)
+            Submission(function_, args, kwargs)
             for function_, args, kwargs in zip(functions, args_list, kwargs_list)
         ]
 
+    def get_num_workers(self) -> int:
+        return len(self.workers)
+
+    def get_finished_workers(self) -> list[Future[Any]]:
+        return [worker for worker in self.workers if worker.done()]
+
+    def get_num_finished_wokers(self) -> int:
+        return len(self.get_finished_workers())
+
+    def get_results(self) -> list[Any]:
+        return [worker.result() for worker in self.workers]
+
+    def get_unfinished_workers(self) -> list[Future[Any]]:
+        return [worker for worker in self.workers if not worker.done()]
+
+    def get_num_unfinished_workers(self) -> int:
+        return len(self.get_unfinished_workers())
+
     def execute(
-        self, show_progbar: bool = True, prefix: str | Callable[[], Any] = ""
+        self,
+        show_progbar: bool = True,
+        description: str | Callable[[], Any] = "",
+        suffix: str | Callable[[], Any] = "",
     ) -> list[Any]:
         """Execute the supplied functions with their arguments, if any.
 
@@ -84,36 +124,42 @@ class _QuickPool:
 
         #### :params:
 
-        `show_progbar`: If `True`, print a progress bar to the terminal showing how many functions have finished executing.
+        `show_progbar`: If `True`, print a progress bar to the terminal showing completion.
 
-        `prefix`: String to display at the front of the progbar (will always include a runtime clock).
+        `description`: Message to display at the front of the progress bar.
+        Can be a string or a function that takes no arguments and returns an object that can be casted to a string.
 
-        `suffix`: String to display after the progbar.
+        `suffix`: Message to display at the end of the progress display.
+        Can be a string or a function that takes no arguments and returns an object that can be casted to a string.
 
-        `progbar_update_period`: How often, in seconds, to check the number of completed functions. Only relevant if `show_progbar` is `True`.
         """
         with self.executor as executor:
-            workers = [
-                executor.submit(submission[0], *submission[1], **submission[2])
+            self._workers = [
+                executor.submit(
+                    submission.function_, *submission.args, **submission.kwargs
+                )
                 for submission in self.submissions
             ]
             if show_progbar:
-                num_workers = len(workers)
+                num_workers = self.get_num_workers()
                 with printbuddies.Progress(disable=not show_progbar) as progress:
-                    pool = progress.add_task(f"{prefix}", total=num_workers)
+                    pool = progress.add_task(
+                        f"{str(description()) if isinstance(description, Callable) else description}",
+                        total=num_workers,
+                        suffix=f"{str(suffix()) if isinstance(suffix, Callable) else suffix}",
+                    )
                     while not progress.finished:
                         progress.update(
                             pool,
-                            completed=len(
-                                [worker for worker in workers if worker.done()]
-                            ),
+                            completed=self.get_num_finished_wokers(),
                             description=(
-                                str(prefix())
-                                if isinstance(prefix, Callable)
-                                else prefix
+                                str(description())
+                                if isinstance(description, Callable)
+                                else description
                             ),
+                            suffix=f"{str(suffix()) if isinstance(suffix, Callable) else suffix}",
                         )
-            return [worker.result() for worker in workers]
+            return self.get_results()
 
 
 class ProcessPool(_QuickPool):
