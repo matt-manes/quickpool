@@ -200,7 +200,9 @@ def update_and_wait(
 
     console = Console()
     timer = Timer(subsecond_resolution=False).start()
-    update_message: Callable[[], str] = (
+    update_message: Callable[
+        [], str
+    ] = (
         lambda: f"{str(message()) if isinstance(message, Callable) else message} | {timer.elapsed_str}".strip()
     )
     with console.status(
