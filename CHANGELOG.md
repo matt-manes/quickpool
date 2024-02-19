@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.1 (2024-02-19)
+
+#### Refactorings
+
+* `update_and_wait` implements a rich status object
+
+
 ## v1.0.0 (2024-02-17)
 
 #### Refactorings
