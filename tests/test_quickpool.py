@@ -6,11 +6,10 @@ from quickpool import quickpool
 
 
 def test__get_submissions():
-    def dummy(*args: Any, **kwargs: Any):
-        ...
+    def dummy(*args: Any, **kwargs: Any): ...
 
     num = 5
-    pool = quickpool._QuickPool(  # type: ignore
+    pool = quickpool._QuickPool(
         [dummy] * num, [(i, 2 * i) for i in range(5)], [{"i": i} for i in range(5)]
     )
     for i, submission in enumerate(pool.submissions):
@@ -83,9 +82,7 @@ def test__thread_pool_all_workers_kwargs():
 def test__thread_pool_dynamic_description():
     pool = get_threadpool_args()
     pool._submissions = pool._submissions * 10
-    description: Callable[
-        [], str
-    ] = (
+    description: Callable[[], str] = (
         lambda: f"Finished workers: {pool.get_num_finished_wokers()}|-|{pool.get_num_unfinished_workers()}"
     )
     print()

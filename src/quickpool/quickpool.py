@@ -5,6 +5,7 @@ from typing import Any, Callable, Mapping, Sequence
 
 import printbuddies
 from noiftimer import Timer
+from rich.console import Console
 
 
 @dataclass
@@ -177,6 +178,8 @@ class ThreadPool(_QuickPool):
 def update_and_wait(
     function: Callable[..., Any],
     message: str | Callable[[], Any] = "",
+    spinner: str = "arc",
+    spinner_style: str = "deep_pink1",
     *args: Any,
     **kwargs: Any,
 ) -> Any:
@@ -195,23 +198,17 @@ def update_and_wait(
     >>> Waiting on trash | runtime: 9s 993ms 462us
     >>> 32"""
 
-    timer = Timer().start()
-
-    def update():
-        if isinstance(message, str):
-            display_message = f"{message} |"
-        else:
-            display_message = f"{message()} |"
-        printbuddies.print_in_place(
-            f"{display_message} runtime: {timer.elapsed_str}".strip(),
-            True,
-            truncate=False,
-        )  # Remove the space if display_message is an empty string
-        time.sleep(1)
-
-    with ThreadPoolExecutor() as pool:
-        worker = pool.submit(function, *args, **kwargs)
-        while not worker.done():
-            update()
-    print()
+    console = Console()
+    timer = Timer(subsecond_resolution=False).start()
+    update_message: Callable[[], str] = (
+        lambda: f"{str(message()) if isinstance(message, Callable) else message} | {timer.elapsed_str}".strip()
+    )
+    with console.status(
+        update_message(), spinner=spinner, spinner_style=spinner_style
+    ) as c:
+        with ThreadPoolExecutor() as pool:
+            worker = pool.submit(function, *args, **kwargs)
+            while not worker.done():
+                time.sleep(1)
+                c.update(update_message())
     return worker.result()
