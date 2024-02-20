@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.2 (2024-02-20)
+
+#### Fixes
+
+* Revert `Submission` dataclass implementation due to threading issues
+
 ## v1.0.1 (2024-02-19)
 
 #### Refactorings
