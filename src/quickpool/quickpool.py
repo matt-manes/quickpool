@@ -1,23 +1,12 @@
 import time
 from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
-from dataclasses import dataclass
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Callable
 
 import printbuddies
 from noiftimer import Timer
 from rich.console import Console
 
-
-@dataclass
-class Submission:
-    """Class representing a submission to the executor pool.
-
-    Consists of a function to be called as well as any arguments or keyword arguments to be passed to it.
-    """
-
-    function_: Callable[..., Any]
-    args: Sequence[Any]
-    kwargs: Mapping[str, Any]
+Submission = tuple[Callable[..., Any], tuple[Any, ...], dict[str, Any]]
 
 
 class _QuickPool:
@@ -60,28 +49,23 @@ class _QuickPool:
         >>> results = pool.execute()
         >>> print(results)
         >>> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"""
-        self._submissions = self._prepare_submissions(functions, args_list, kwargs_list)
+        self.functions = functions
+        self.args_list = args_list
+        self.kwargs_list = kwargs_list
         self.max_workers = max_workers
-        self._workers: list[Future[Any]]
 
     @property
     def executor(self) -> Any:
         raise NotImplementedError
 
     @property
-    def submissions(self) -> list[Submission]:
-        return self._submissions
-
-    @property
     def workers(self) -> list[Future[Any]]:
         return self._workers
 
-    def _prepare_submissions(
-        self,
-        functions: list[Callable[..., Any]],
-        args_list: list[tuple[Any, ...]] = [],
-        kwargs_list: list[dict[str, Any]] = [],
-    ):
+    def _prepare_submissions(self) -> list[Submission]:
+        functions = self.functions
+        args_list = self.args_list
+        kwargs_list = self.kwargs_list
         num_functions = len(functions)
         num_args = len(args_list)
         num_kwargs = len(kwargs_list)
@@ -91,9 +75,12 @@ class _QuickPool:
         if num_kwargs < num_functions:
             kwargs_list.extend([dict() for _ in range(num_functions - num_kwargs)])
         return [
-            Submission(function_, args, kwargs)
+            (function_, args, kwargs)
             for function_, args, kwargs in zip(functions, args_list, kwargs_list)
         ]
+
+    def get_submissions(self) -> list[Submission]:
+        return self._prepare_submissions()
 
     def get_num_workers(self) -> int:
         return len(self.workers)
@@ -125,21 +112,18 @@ class _QuickPool:
 
         #### :params:
 
-        `show_progbar`: If `True`, print a progress bar to the terminal showing completion.
+        `show_progbar`: If `True`, print a progress bar to the terminal showing how many functions have finished executing.
 
-        `description`: Message to display at the front of the progress bar.
-        Can be a string or a function that takes no arguments and returns an object that can be casted to a string.
+        `prefix`: String to display at the front of the progbar (will always include a runtime clock).
 
-        `suffix`: Message to display at the end of the progress display.
-        Can be a string or a function that takes no arguments and returns an object that can be casted to a string.
+        `suffix`: String to display after the progbar.
 
+        `progbar_update_period`: How often, in seconds, to check the number of completed functions. Only relevant if `show_progbar` is `True`.
         """
         with self.executor as executor:
             self._workers = [
-                executor.submit(
-                    submission.function_, *submission.args, **submission.kwargs
-                )
-                for submission in self.submissions
+                executor.submit(submission[0], *submission[1], **submission[2])
+                for submission in self.get_submissions()
             ]
             if show_progbar:
                 num_workers = self.get_num_workers()
@@ -160,6 +144,7 @@ class _QuickPool:
                             ),
                             suffix=f"{str(suffix()) if isinstance(suffix, Callable) else suffix}",
                         )
+                        time.sleep(0.001)
             return self.get_results()
 
 
@@ -200,9 +185,7 @@ def update_and_wait(
 
     console = Console()
     timer = Timer(subsecond_resolution=False).start()
-    update_message: Callable[
-        [], str
-    ] = (
+    update_message: Callable[[], str] = (
         lambda: f"{str(message()) if isinstance(message, Callable) else message} | {timer.elapsed_str}".strip()
     )
     with console.status(

@@ -6,15 +6,14 @@ from quickpool import quickpool
 
 
 def test__get_submissions():
-    def dummy(*args: Any, **kwargs: Any):
-        ...
+    def dummy(*args: Any, **kwargs: Any): ...
 
     num = 5
-    pool = quickpool._QuickPool(
+    pool = quickpool._QuickPool(  # type: ignore
         [dummy] * num, [(i, 2 * i) for i in range(5)], [{"i": i} for i in range(5)]
     )
-    for i, submission in enumerate(pool.submissions):
-        assert submission == quickpool.Submission(dummy, (i, 2 * i), {"i": i})
+    for i, submission in enumerate(pool.get_submissions()):
+        assert submission == (dummy, (i, 2 * i), {"i": i})
 
 
 def naptime(return_val: float, duration: float) -> float:
@@ -49,7 +48,7 @@ def test__thread_pool_all_workers_args():
     pool = get_threadpool_args()
     print()
     results = pool.execute(description="test all workers args")
-    for i, result in zip(range(len(pool.submissions)), results):
+    for i, result in zip(range(len(pool.functions)), results):
         assert result == i
 
 
@@ -58,7 +57,7 @@ def test__thread_pool_all_workers_args_limit_workers():
     pool.max_workers = 1
     print()
     results = pool.execute(description="test all workers args limit workers")
-    for i, result in zip(range(len(pool.submissions)), results):
+    for i, result in zip(range(len(pool.functions)), results):
         assert result == i
 
 
@@ -67,7 +66,7 @@ def test__thread_pool_all_workers_args_no_bar():
     print()
     print("No bar display start")
     results = pool.execute(False)
-    for i, result in zip(range(len(pool.submissions)), results):
+    for i, result in zip(range(len(pool.functions)), results):
         assert result == i
     print("No bar display stop")
 
@@ -76,32 +75,20 @@ def test__thread_pool_all_workers_kwargs():
     pool = get_threadpool_kwargs()
     print()
     results = pool.execute(description="test all workers kwargs")
-    for i, result in zip(range(len(pool.submissions)), results):
+    for i, result in zip(range(len(pool.functions)), results):
         assert result == i
 
 
-def test__thread_pool_dynamic_description():
+def test__thread_pool_dynamic_prefix():
     pool = get_threadpool_args()
-    pool._submissions = pool._submissions * 10
-    description: Callable[
-        [], str
-    ] = (
+    pool.functions *= 10
+    pool.args_list *= 10
+    pool.kwargs_list *= 10
+    description: Callable[[], str] = (
         lambda: f"Finished workers: {pool.get_num_finished_wokers()}|-|{pool.get_num_unfinished_workers()}"
     )
     print()
     results = pool.execute(description=description)
-
-    class Yeet:
-        def yeehaw(self) -> int:
-            return random.randint(0, 100000)
-
-        def naptime(self):
-            time.sleep(random.random() * 0.5)
-
-    execute: Callable[[Yeet], Any] = lambda y: y.naptime()
-    pool = quickpool.ThreadPool([execute] * 500, [(Yeet(),)] * 500)
-    print()
-    results = pool.execute(suffix=pool.submissions[0].args[0].yeehaw)
 
 
 def test__update_and_wait():
@@ -130,7 +117,7 @@ def main():
     pool = get_processpool_args()
     print()
     results = pool.execute()
-    for i, result in zip(range(len(pool.submissions)), results):
+    for i, result in zip(range(len(pool.functions)), results):
         assert result == i
 
 
