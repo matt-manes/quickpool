@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.0.0 (2025-03-31)
+
+#### New Features
+
+* BREAKING remove `spinner` and `spinner_style` args from `update_and_wait`
+
+#### Others
+
+* update formatting
+* format changelog
+
 ## v1.0.2 (2024-02-20)
 
 #### Fixes
