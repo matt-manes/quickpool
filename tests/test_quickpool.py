@@ -6,7 +6,8 @@ from quickpool import quickpool
 
 
 def test__get_submissions():
-    def dummy(*args: Any, **kwargs: Any): ...
+    def dummy(*args: Any, **kwargs: Any):
+        ...
 
     num = 5
     pool = quickpool._QuickPool(  # type: ignore
@@ -84,7 +85,9 @@ def test__thread_pool_dynamic_prefix():
     pool.functions *= 10
     pool.args_list *= 10
     pool.kwargs_list *= 10
-    description: Callable[[], str] = (
+    description: Callable[
+        [], str
+    ] = (
         lambda: f"Finished workers: {pool.get_num_finished_wokers()}|-|{pool.get_num_unfinished_workers()}"
     )
     print()
