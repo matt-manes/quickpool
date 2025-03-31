@@ -163,8 +163,6 @@ class ThreadPool(_QuickPool):
 def update_and_wait(
     function: Callable[..., Any],
     message: str | Callable[[], Any] = "",
-    spinner: str = "arc",
-    spinner_style: str = "deep_pink1",
     *args: Any,
     **kwargs: Any,
 ) -> Any:
@@ -182,12 +180,11 @@ def update_and_wait(
     >>> main()
     >>> Waiting on trash | runtime: 9s 993ms 462us
     >>> 32"""
-
+    spinner = "arc"
+    spinner_style = "deep_pink1"
     console = Console()
     timer = Timer(subsecond_resolution=False).start()
-    update_message: Callable[
-        [], str
-    ] = (
+    update_message: Callable[[], str] = (
         lambda: f"{str(message()) if isinstance(message, Callable) else message} | {timer.elapsed_str}".strip()
     )
     with console.status(
@@ -196,6 +193,6 @@ def update_and_wait(
         with ThreadPoolExecutor() as pool:
             worker = pool.submit(function, *args, **kwargs)
             while not worker.done():
-                time.sleep(1)
+                time.sleep(0.001)
                 c.update(update_message())
     return worker.result()
