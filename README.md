@@ -6,13 +6,13 @@ Use ProcessPoolExecutor and ThreadPoolExecutor from concurrent.futures with a pr
 
 Install with:
 
-<pre>
+```console
 pip install quickpool
-</pre>
+```
 
 ## Usage
 
-<pre>
+```python
 >>> import random
 >>> import time
 >>> import quickpool
@@ -32,4 +32,4 @@ pip install quickpool
 >>> demo()
  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 3s
 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
-</pre>
+```
