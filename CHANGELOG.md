@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.1.0 (2025-05-15)
+
+#### New Features
+
+* implement `to_args_list()`
+* implement `for_each()`
+
 ## v2.0.0 (2025-03-31)
 
 #### New Features
