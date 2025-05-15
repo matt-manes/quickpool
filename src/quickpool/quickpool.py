@@ -1,6 +1,6 @@
 import time
 from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
-from typing import Any, Callable
+from typing import Any, Callable, Sequence
 
 import printbuddies
 from noiftimer import Timer
@@ -12,14 +12,14 @@ Submission = tuple[Callable[..., Any], tuple[Any, ...], dict[str, Any]]
 class _QuickPool:
     def __init__(
         self,
-        functions: list[Callable[..., Any]],
-        args_list: list[tuple[Any, ...]] = [],
-        kwargs_list: list[dict[str, Any]] = [],
+        functions: Sequence[Callable[..., Any]],
+        args_list: Sequence[tuple[Any, ...]] = [],
+        kwargs_list: Sequence[dict[str, Any]] = [],
         max_workers: int | None = None,
     ):
         """Quickly implement multi-threading/processing with an optional progress bar display.
 
-        #### :params:
+        #### params
 
         `functions`: A list of functions to be executed.
 
@@ -49,9 +49,9 @@ class _QuickPool:
         >>> results = pool.execute()
         >>> print(results)
         >>> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"""
-        self.functions = functions
-        self.args_list = args_list
-        self.kwargs_list = kwargs_list
+        self.functions = list(functions)
+        self.args_list = list(args_list)
+        self.kwargs_list = list(kwargs_list)
         self.max_workers = max_workers
 
     @property
@@ -110,15 +110,13 @@ class _QuickPool:
 
         Returns a list of function call results.
 
-        #### :params:
+        #### params
 
         `show_progbar`: If `True`, print a progress bar to the terminal showing how many functions have finished executing.
 
-        `prefix`: String to display at the front of the progbar (will always include a runtime clock).
+        `description`: String or callable that takes no args and returns a string to display at the front of the progbar (will always include a runtime clock).
 
-        `suffix`: String to display after the progbar.
-
-        `progbar_update_period`: How often, in seconds, to check the number of completed functions. Only relevant if `show_progbar` is `True`.
+        `suffix`: String or callable that takes no args and returns a string to display after the progbar.
         """
         with self.executor as executor:
             self._workers = [
@@ -184,9 +182,7 @@ def update_and_wait(
     spinner_style = "deep_pink1"
     console = Console()
     timer = Timer(subsecond_resolution=False).start()
-    update_message: Callable[
-        [], str
-    ] = (
+    update_message: Callable[[], str] = (
         lambda: f"{str(message()) if isinstance(message, Callable) else message} | {timer.elapsed_str}".strip()
     )
     with console.status(
@@ -198,3 +194,48 @@ def update_and_wait(
                 time.sleep(0.001)
                 c.update(update_message())
     return worker.result()
+
+
+def for_each(
+    func: Callable[..., Any],
+    args_list: Sequence[tuple[Any, ...]] = [],
+    kwargs_list: Sequence[dict[str, Any]] = [],
+    max_workers: int | None = None,
+    show_progbar: bool = True,
+    description: str | Callable[[], Any] = "",
+    suffix: str | Callable[[], Any] = "",
+    num_calls: int | None = None,
+) -> list[Any]:
+    """Multithread calls to `func` for each pair of `args_list` and `kwargs_list` tuples and return the results.
+
+    #### params
+
+    `func`: The function to execute on each pair of `args_list` and `kwargs_list` tuples.
+
+    `args_list`: A list of tuples where each tuple consists of positional arguments to be passed to call to `func` at execution time.
+
+    `kwargs_list`: A list of dictionaries where each dictionary consists of keyword arguments to be passed to call to `func` at execution time.
+
+    `max_workers`: The maximum number of concurrent threads. If `None`, the max available to the system will be used.
+
+    `show_progbar`: If `True`, print a progress bar to the terminal showing how many functions have finished executing.
+
+    `description`: String or callable that takes no args and returns a string to display at the front of the progbar (will always include a runtime clock).
+
+    `suffix`: String or callable that takes no args and returns a string to display after the progbar.
+
+    `num_calls`: The number of times to call `func`. If `None` (default), `func` will be executed `max(len(args_list), len(kwargs_list))` times.
+
+    #### e.g.
+    >>> def f(t, m = 1):
+    >>>     time.sleep(t * m)
+    >>>     return t*m
+    >>> results = for_each(f, [(i) for i in range(10)], [{"m": j*1.1} for j in range(10)])
+
+    >>> def f():
+    >>>     time.sleep(random.random())
+    >>> for_each(f, num_calls=10)
+    """
+    funcs = [func] * (num_calls if num_calls else max(len(args_list), len(kwargs_list)))
+    pool = ThreadPool(funcs, args_list, kwargs_list, max_workers)
+    return pool.execute(show_progbar, description, suffix)
