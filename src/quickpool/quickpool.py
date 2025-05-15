@@ -6,14 +6,35 @@ import printbuddies
 from noiftimer import Timer
 from rich.console import Console
 
-Submission = tuple[Callable[..., Any], tuple[Any, ...], dict[str, Any]]
+Submission = tuple[Callable[..., Any], Sequence[Any], dict[str, Any]]
+
+
+def to_args_list(args: Sequence[Any]) -> list[tuple[Any, ...]]:
+    """Convert a sequence of elements to a list of tuples where each tuple contains one element for the sequence.
+
+    Makes for easier to read calls to `quickpool` functions for the common case of single-input functions where you have a 1-dimensional sequence.
+
+    >>> items:list[str] = foo.get_all_items()
+    >>> results = for_each(bar, to_args_list(items))
+
+    instead of
+
+    >>> results = for_each(bar, [(item,) for item in items]))
+
+    works with generators too:
+    >>> results = for_each(bar, to_args_list(range(10)))
+
+    instead of
+
+    >>> results = for_each(bar, [(i,) for i in range(10)])"""
+    return [(arg,) for arg in args]
 
 
 class _QuickPool:
     def __init__(
         self,
         functions: Sequence[Callable[..., Any]],
-        args_list: Sequence[tuple[Any, ...]] = [],
+        args_list: Sequence[Sequence[Any]] = [],
         kwargs_list: Sequence[dict[str, Any]] = [],
         max_workers: int | None = None,
     ):

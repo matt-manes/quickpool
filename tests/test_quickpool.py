@@ -153,6 +153,16 @@ def test__for_each_no_args():
     assert len(quickpool.for_each(f, num_calls=10)) == 10
 
 
+def test__to_args_list():
+    def f(num: int):
+        time.sleep(random.random())
+        return num
+
+    results = quickpool.for_each(f, quickpool.to_args_list(range(10)))
+    assert results == list(range(10))
+    assert results == quickpool.for_each(f, [(i,) for i in range(10)])
+
+
 def main():
     """Process pool executor requires that it be used in a "__main__" block.
     So this test needs to be run manually after installing this package as an editable install:
