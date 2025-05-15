@@ -70,10 +70,11 @@ class _QuickPool:
         >>> results = pool.execute()
         >>> print(results)
         >>> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"""
-        self.functions = list(functions)
-        self.args_list = list(args_list)
-        self.kwargs_list = list(kwargs_list)
+        self._functions = list(functions)
+        self._args_list = list(args_list)
+        self._kwargs_list = list(kwargs_list)
         self.max_workers = max_workers
+        self._submissions: list[Submission] = []
 
     @property
     def executor(self) -> Any:
@@ -83,10 +84,10 @@ class _QuickPool:
     def workers(self) -> list[Future[Any]]:
         return self._workers
 
-    def _prepare_submissions(self) -> list[Submission]:
-        functions = self.functions
-        args_list = self.args_list
-        kwargs_list = self.kwargs_list
+    def _get_prepared_submissions(self) -> list[Submission]:
+        functions = self._functions
+        args_list = self._args_list
+        kwargs_list = self._kwargs_list
         num_functions = len(functions)
         num_args = len(args_list)
         num_kwargs = len(kwargs_list)
@@ -100,8 +101,21 @@ class _QuickPool:
             for function_, args, kwargs in zip(functions, args_list, kwargs_list)
         ]
 
-    def get_submissions(self) -> list[Submission]:
-        return self._prepare_submissions()
+    @property
+    def submissions(self) -> list[Submission]:
+        return self._submissions
+
+    @property
+    def functions(self) -> list[Callable[..., Any]]:
+        return self._functions
+
+    @property
+    def args_list(self) -> list[Sequence[Any]]:
+        return self._args_list
+
+    @property
+    def kwargs_list(self) -> list[dict[str, Any]]:
+        return self._kwargs_list
 
     def get_num_workers(self) -> int:
         return len(self.workers)
@@ -140,9 +154,10 @@ class _QuickPool:
         `suffix`: String or callable that takes no args and returns a string to display after the progbar.
         """
         with self.executor as executor:
+            self._submissions = self._get_prepared_submissions()
             self._workers = [
                 executor.submit(submission[0], *submission[1], **submission[2])
-                for submission in self.get_submissions()
+                for submission in self.submissions
             ]
             if show_progbar:
                 num_workers = self.get_num_workers()
