@@ -44,6 +44,9 @@
             <li>
                     <a class="function" href="#to_args_list">to_args_list</a>
             </li>
+            <li>
+                    <a class="function" href="#to_kwargs_list">to_kwargs_list</a>
+            </li>
     </ul>
 
 
@@ -65,10 +68,24 @@ quickpool    </h1>
 
                         <label class="view-source-button" for="mod-quickpool-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">from</span> <span class="nn">.quickpool</span> <span class="kn">import</span> <span class="n">ProcessPool</span><span class="p">,</span> <span class="n">ThreadPool</span><span class="p">,</span> <span class="n">for_each</span><span class="p">,</span> <span class="n">to_args_list</span><span class="p">,</span> <span class="n">update_and_wait</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;2.1.0&quot;</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos">4</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ProcessPool&quot;</span><span class="p">,</span> <span class="s2">&quot;ThreadPool&quot;</span><span class="p">,</span> <span class="s2">&quot;update_and_wait&quot;</span><span class="p">,</span> <span class="s2">&quot;for_each&quot;</span><span class="p">,</span> <span class="s2">&quot;to_args_list&quot;</span><span class="p">]</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span> <span class="nn">.quickpool</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>    <span class="n">ProcessPool</span><span class="p">,</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>    <span class="n">ThreadPool</span><span class="p">,</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>    <span class="n">for_each</span><span class="p">,</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>    <span class="n">to_args_list</span><span class="p">,</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>    <span class="n">to_kwargs_list</span><span class="p">,</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="n">update_and_wait</span><span class="p">,</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="p">)</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;2.2.0&quot;</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="s2">&quot;ProcessPool&quot;</span><span class="p">,</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="s2">&quot;ThreadPool&quot;</span><span class="p">,</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="s2">&quot;update_and_wait&quot;</span><span class="p">,</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="s2">&quot;for_each&quot;</span><span class="p">,</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="s2">&quot;to_args_list&quot;</span><span class="p">,</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="s2">&quot;to_kwargs_list&quot;</span><span class="p">,</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="p">]</span>
 </span></pre></div>
 
 
@@ -84,10 +101,10 @@ quickpool    </h1>
 
     </div>
     <a class="headerlink" href="#ProcessPool"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ProcessPool-186"><a href="#ProcessPool-186"><span class="linenos">186</span></a><span class="k">class</span> <span class="nc">ProcessPool</span><span class="p">(</span><span class="n">_QuickPool</span><span class="p">):</span>
-</span><span id="ProcessPool-187"><a href="#ProcessPool-187"><span class="linenos">187</span></a>    <span class="nd">@property</span>
-</span><span id="ProcessPool-188"><a href="#ProcessPool-188"><span class="linenos">188</span></a>    <span class="k">def</span> <span class="nf">executor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProcessPoolExecutor</span><span class="p">:</span>
-</span><span id="ProcessPool-189"><a href="#ProcessPool-189"><span class="linenos">189</span></a>        <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ProcessPool-215"><a href="#ProcessPool-215"><span class="linenos">215</span></a><span class="k">class</span> <span class="nc">ProcessPool</span><span class="p">(</span><span class="n">_QuickPool</span><span class="p">):</span>
+</span><span id="ProcessPool-216"><a href="#ProcessPool-216"><span class="linenos">216</span></a>    <span class="nd">@property</span>
+</span><span id="ProcessPool-217"><a href="#ProcessPool-217"><span class="linenos">217</span></a>    <span class="k">def</span> <span class="nf">executor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProcessPoolExecutor</span><span class="p">:</span>
+</span><span id="ProcessPool-218"><a href="#ProcessPool-218"><span class="linenos">218</span></a>        <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -121,10 +138,10 @@ quickpool    </h1>
 
     </div>
     <a class="headerlink" href="#ThreadPool"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadPool-192"><a href="#ThreadPool-192"><span class="linenos">192</span></a><span class="k">class</span> <span class="nc">ThreadPool</span><span class="p">(</span><span class="n">_QuickPool</span><span class="p">):</span>
-</span><span id="ThreadPool-193"><a href="#ThreadPool-193"><span class="linenos">193</span></a>    <span class="nd">@property</span>
-</span><span id="ThreadPool-194"><a href="#ThreadPool-194"><span class="linenos">194</span></a>    <span class="k">def</span> <span class="nf">executor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ThreadPoolExecutor</span><span class="p">:</span>
-</span><span id="ThreadPool-195"><a href="#ThreadPool-195"><span class="linenos">195</span></a>        <span class="k">return</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadPool-221"><a href="#ThreadPool-221"><span class="linenos">221</span></a><span class="k">class</span> <span class="nc">ThreadPool</span><span class="p">(</span><span class="n">_QuickPool</span><span class="p">):</span>
+</span><span id="ThreadPool-222"><a href="#ThreadPool-222"><span class="linenos">222</span></a>    <span class="nd">@property</span>
+</span><span id="ThreadPool-223"><a href="#ThreadPool-223"><span class="linenos">223</span></a>    <span class="k">def</span> <span class="nf">executor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ThreadPoolExecutor</span><span class="p">:</span>
+</span><span id="ThreadPool-224"><a href="#ThreadPool-224"><span class="linenos">224</span></a>        <span class="k">return</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -158,44 +175,44 @@ quickpool    </h1>
 
     </div>
     <a class="headerlink" href="#update_and_wait"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="update_and_wait-198"><a href="#update_and_wait-198"><span class="linenos">198</span></a><span class="k">def</span> <span class="nf">update_and_wait</span><span class="p">(</span>
-</span><span id="update_and_wait-199"><a href="#update_and_wait-199"><span class="linenos">199</span></a>    <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-</span><span id="update_and_wait-200"><a href="#update_and_wait-200"><span class="linenos">200</span></a>    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="update_and_wait-201"><a href="#update_and_wait-201"><span class="linenos">201</span></a>    <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="update_and_wait-202"><a href="#update_and_wait-202"><span class="linenos">202</span></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="update_and_wait-203"><a href="#update_and_wait-203"><span class="linenos">203</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="update_and_wait-204"><a href="#update_and_wait-204"><span class="linenos">204</span></a>    <span class="sd">&quot;&quot;&quot;While `function` runs with `*args` and `**kwargs`,</span>
-</span><span id="update_and_wait-205"><a href="#update_and_wait-205"><span class="linenos">205</span></a><span class="sd">    print out an optional `message` (a runtime clock will be appended to `message`) at 1 second intervals.</span>
-</span><span id="update_and_wait-206"><a href="#update_and_wait-206"><span class="linenos">206</span></a>
-</span><span id="update_and_wait-207"><a href="#update_and_wait-207"><span class="linenos">207</span></a><span class="sd">    Returns the output of `function`.</span>
-</span><span id="update_and_wait-208"><a href="#update_and_wait-208"><span class="linenos">208</span></a>
-</span><span id="update_and_wait-209"><a href="#update_and_wait-209"><span class="linenos">209</span></a><span class="sd">    &gt;&gt;&gt; def main():</span>
-</span><span id="update_and_wait-210"><a href="#update_and_wait-210"><span class="linenos">210</span></a><span class="sd">    &gt;&gt;&gt;   def trash(n1: int, n2: int) -&gt; int:</span>
-</span><span id="update_and_wait-211"><a href="#update_and_wait-211"><span class="linenos">211</span></a><span class="sd">    &gt;&gt;&gt;      time.sleep(10)</span>
-</span><span id="update_and_wait-212"><a href="#update_and_wait-212"><span class="linenos">212</span></a><span class="sd">    &gt;&gt;&gt;      return n1 + n2</span>
-</span><span id="update_and_wait-213"><a href="#update_and_wait-213"><span class="linenos">213</span></a><span class="sd">    &gt;&gt;&gt;   val = update_and_wait(trash, &quot;Waiting on trash&quot;, 10, 22)</span>
-</span><span id="update_and_wait-214"><a href="#update_and_wait-214"><span class="linenos">214</span></a><span class="sd">    &gt;&gt;&gt;   print(val)</span>
-</span><span id="update_and_wait-215"><a href="#update_and_wait-215"><span class="linenos">215</span></a><span class="sd">    &gt;&gt;&gt; main()</span>
-</span><span id="update_and_wait-216"><a href="#update_and_wait-216"><span class="linenos">216</span></a><span class="sd">    &gt;&gt;&gt; Waiting on trash | runtime: 9s 993ms 462us</span>
-</span><span id="update_and_wait-217"><a href="#update_and_wait-217"><span class="linenos">217</span></a><span class="sd">    &gt;&gt;&gt; 32&quot;&quot;&quot;</span>
-</span><span id="update_and_wait-218"><a href="#update_and_wait-218"><span class="linenos">218</span></a>    <span class="n">spinner</span> <span class="o">=</span> <span class="s2">&quot;arc&quot;</span>
-</span><span id="update_and_wait-219"><a href="#update_and_wait-219"><span class="linenos">219</span></a>    <span class="n">spinner_style</span> <span class="o">=</span> <span class="s2">&quot;deep_pink1&quot;</span>
-</span><span id="update_and_wait-220"><a href="#update_and_wait-220"><span class="linenos">220</span></a>    <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
-</span><span id="update_and_wait-221"><a href="#update_and_wait-221"><span class="linenos">221</span></a>    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="n">subsecond_resolution</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="update_and_wait-222"><a href="#update_and_wait-222"><span class="linenos">222</span></a>    <span class="n">update_message</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
-</span><span id="update_and_wait-223"><a href="#update_and_wait-223"><span class="linenos">223</span></a>        <span class="p">[],</span> <span class="nb">str</span>
-</span><span id="update_and_wait-224"><a href="#update_and_wait-224"><span class="linenos">224</span></a>    <span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="update_and_wait-225"><a href="#update_and_wait-225"><span class="linenos">225</span></a>        <span class="k">lambda</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">message</span><span class="p">())</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">Callable</span><span class="p">)</span> <span class="k">else</span> <span class="n">message</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsed_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span><span id="update_and_wait-226"><a href="#update_and_wait-226"><span class="linenos">226</span></a>    <span class="p">)</span>
-</span><span id="update_and_wait-227"><a href="#update_and_wait-227"><span class="linenos">227</span></a>    <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span>
-</span><span id="update_and_wait-228"><a href="#update_and_wait-228"><span class="linenos">228</span></a>        <span class="n">update_message</span><span class="p">(),</span> <span class="n">spinner</span><span class="o">=</span><span class="n">spinner</span><span class="p">,</span> <span class="n">spinner_style</span><span class="o">=</span><span class="n">spinner_style</span>
-</span><span id="update_and_wait-229"><a href="#update_and_wait-229"><span class="linenos">229</span></a>    <span class="p">)</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
-</span><span id="update_and_wait-230"><a href="#update_and_wait-230"><span class="linenos">230</span></a>        <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-</span><span id="update_and_wait-231"><a href="#update_and_wait-231"><span class="linenos">231</span></a>            <span class="n">worker</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="update_and_wait-232"><a href="#update_and_wait-232"><span class="linenos">232</span></a>            <span class="k">while</span> <span class="ow">not</span> <span class="n">worker</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-</span><span id="update_and_wait-233"><a href="#update_and_wait-233"><span class="linenos">233</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
-</span><span id="update_and_wait-234"><a href="#update_and_wait-234"><span class="linenos">234</span></a>                <span class="n">c</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">update_message</span><span class="p">())</span>
-</span><span id="update_and_wait-235"><a href="#update_and_wait-235"><span class="linenos">235</span></a>    <span class="k">return</span> <span class="n">worker</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="update_and_wait-227"><a href="#update_and_wait-227"><span class="linenos">227</span></a><span class="k">def</span> <span class="nf">update_and_wait</span><span class="p">(</span>
+</span><span id="update_and_wait-228"><a href="#update_and_wait-228"><span class="linenos">228</span></a>    <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+</span><span id="update_and_wait-229"><a href="#update_and_wait-229"><span class="linenos">229</span></a>    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="update_and_wait-230"><a href="#update_and_wait-230"><span class="linenos">230</span></a>    <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="update_and_wait-231"><a href="#update_and_wait-231"><span class="linenos">231</span></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="update_and_wait-232"><a href="#update_and_wait-232"><span class="linenos">232</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="update_and_wait-233"><a href="#update_and_wait-233"><span class="linenos">233</span></a>    <span class="sd">&quot;&quot;&quot;While `function` runs with `*args` and `**kwargs`,</span>
+</span><span id="update_and_wait-234"><a href="#update_and_wait-234"><span class="linenos">234</span></a><span class="sd">    print out an optional `message` (a runtime clock will be appended to `message`) at 1 second intervals.</span>
+</span><span id="update_and_wait-235"><a href="#update_and_wait-235"><span class="linenos">235</span></a>
+</span><span id="update_and_wait-236"><a href="#update_and_wait-236"><span class="linenos">236</span></a><span class="sd">    Returns the output of `function`.</span>
+</span><span id="update_and_wait-237"><a href="#update_and_wait-237"><span class="linenos">237</span></a>
+</span><span id="update_and_wait-238"><a href="#update_and_wait-238"><span class="linenos">238</span></a><span class="sd">    &gt;&gt;&gt; def main():</span>
+</span><span id="update_and_wait-239"><a href="#update_and_wait-239"><span class="linenos">239</span></a><span class="sd">    &gt;&gt;&gt;   def trash(n1: int, n2: int) -&gt; int:</span>
+</span><span id="update_and_wait-240"><a href="#update_and_wait-240"><span class="linenos">240</span></a><span class="sd">    &gt;&gt;&gt;      time.sleep(10)</span>
+</span><span id="update_and_wait-241"><a href="#update_and_wait-241"><span class="linenos">241</span></a><span class="sd">    &gt;&gt;&gt;      return n1 + n2</span>
+</span><span id="update_and_wait-242"><a href="#update_and_wait-242"><span class="linenos">242</span></a><span class="sd">    &gt;&gt;&gt;   val = update_and_wait(trash, &quot;Waiting on trash&quot;, 10, 22)</span>
+</span><span id="update_and_wait-243"><a href="#update_and_wait-243"><span class="linenos">243</span></a><span class="sd">    &gt;&gt;&gt;   print(val)</span>
+</span><span id="update_and_wait-244"><a href="#update_and_wait-244"><span class="linenos">244</span></a><span class="sd">    &gt;&gt;&gt; main()</span>
+</span><span id="update_and_wait-245"><a href="#update_and_wait-245"><span class="linenos">245</span></a><span class="sd">    &gt;&gt;&gt; Waiting on trash | runtime: 9s 993ms 462us</span>
+</span><span id="update_and_wait-246"><a href="#update_and_wait-246"><span class="linenos">246</span></a><span class="sd">    &gt;&gt;&gt; 32&quot;&quot;&quot;</span>
+</span><span id="update_and_wait-247"><a href="#update_and_wait-247"><span class="linenos">247</span></a>    <span class="n">spinner</span> <span class="o">=</span> <span class="s2">&quot;arc&quot;</span>
+</span><span id="update_and_wait-248"><a href="#update_and_wait-248"><span class="linenos">248</span></a>    <span class="n">spinner_style</span> <span class="o">=</span> <span class="s2">&quot;deep_pink1&quot;</span>
+</span><span id="update_and_wait-249"><a href="#update_and_wait-249"><span class="linenos">249</span></a>    <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+</span><span id="update_and_wait-250"><a href="#update_and_wait-250"><span class="linenos">250</span></a>    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">(</span><span class="n">subsecond_resolution</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="update_and_wait-251"><a href="#update_and_wait-251"><span class="linenos">251</span></a>    <span class="n">update_message</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+</span><span id="update_and_wait-252"><a href="#update_and_wait-252"><span class="linenos">252</span></a>        <span class="p">[],</span> <span class="nb">str</span>
+</span><span id="update_and_wait-253"><a href="#update_and_wait-253"><span class="linenos">253</span></a>    <span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="update_and_wait-254"><a href="#update_and_wait-254"><span class="linenos">254</span></a>        <span class="k">lambda</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">message</span><span class="p">())</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">Callable</span><span class="p">)</span> <span class="k">else</span> <span class="n">message</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsed_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span id="update_and_wait-255"><a href="#update_and_wait-255"><span class="linenos">255</span></a>    <span class="p">)</span>
+</span><span id="update_and_wait-256"><a href="#update_and_wait-256"><span class="linenos">256</span></a>    <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span>
+</span><span id="update_and_wait-257"><a href="#update_and_wait-257"><span class="linenos">257</span></a>        <span class="n">update_message</span><span class="p">(),</span> <span class="n">spinner</span><span class="o">=</span><span class="n">spinner</span><span class="p">,</span> <span class="n">spinner_style</span><span class="o">=</span><span class="n">spinner_style</span>
+</span><span id="update_and_wait-258"><a href="#update_and_wait-258"><span class="linenos">258</span></a>    <span class="p">)</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
+</span><span id="update_and_wait-259"><a href="#update_and_wait-259"><span class="linenos">259</span></a>        <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+</span><span id="update_and_wait-260"><a href="#update_and_wait-260"><span class="linenos">260</span></a>            <span class="n">worker</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="update_and_wait-261"><a href="#update_and_wait-261"><span class="linenos">261</span></a>            <span class="k">while</span> <span class="ow">not</span> <span class="n">worker</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+</span><span id="update_and_wait-262"><a href="#update_and_wait-262"><span class="linenos">262</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+</span><span id="update_and_wait-263"><a href="#update_and_wait-263"><span class="linenos">263</span></a>                <span class="n">c</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">update_message</span><span class="p">())</span>
+</span><span id="update_and_wait-264"><a href="#update_and_wait-264"><span class="linenos">264</span></a>    <span class="k">return</span> <span class="n">worker</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -231,49 +248,49 @@ print out an optional <code>message</code> (a runtime clock will be appended to 
 
     </div>
     <a class="headerlink" href="#for_each"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="for_each-238"><a href="#for_each-238"><span class="linenos">238</span></a><span class="k">def</span> <span class="nf">for_each</span><span class="p">(</span>
-</span><span id="for_each-239"><a href="#for_each-239"><span class="linenos">239</span></a>    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-</span><span id="for_each-240"><a href="#for_each-240"><span class="linenos">240</span></a>    <span class="n">args_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
-</span><span id="for_each-241"><a href="#for_each-241"><span class="linenos">241</span></a>    <span class="n">kwargs_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
-</span><span id="for_each-242"><a href="#for_each-242"><span class="linenos">242</span></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="for_each-243"><a href="#for_each-243"><span class="linenos">243</span></a>    <span class="n">show_progbar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="for_each-244"><a href="#for_each-244"><span class="linenos">244</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="for_each-245"><a href="#for_each-245"><span class="linenos">245</span></a>    <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="for_each-246"><a href="#for_each-246"><span class="linenos">246</span></a>    <span class="n">num_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="for_each-247"><a href="#for_each-247"><span class="linenos">247</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-</span><span id="for_each-248"><a href="#for_each-248"><span class="linenos">248</span></a>    <span class="sd">&quot;&quot;&quot;Multithread calls to `func` for each pair of `args_list` and `kwargs_list` tuples and return the results.</span>
-</span><span id="for_each-249"><a href="#for_each-249"><span class="linenos">249</span></a>
-</span><span id="for_each-250"><a href="#for_each-250"><span class="linenos">250</span></a><span class="sd">    #### params</span>
-</span><span id="for_each-251"><a href="#for_each-251"><span class="linenos">251</span></a>
-</span><span id="for_each-252"><a href="#for_each-252"><span class="linenos">252</span></a><span class="sd">    `func`: The function to execute on each pair of `args_list` and `kwargs_list` tuples.</span>
-</span><span id="for_each-253"><a href="#for_each-253"><span class="linenos">253</span></a>
-</span><span id="for_each-254"><a href="#for_each-254"><span class="linenos">254</span></a><span class="sd">    `args_list`: A list of tuples where each tuple consists of positional arguments to be passed to call to `func` at execution time.</span>
-</span><span id="for_each-255"><a href="#for_each-255"><span class="linenos">255</span></a>
-</span><span id="for_each-256"><a href="#for_each-256"><span class="linenos">256</span></a><span class="sd">    `kwargs_list`: A list of dictionaries where each dictionary consists of keyword arguments to be passed to call to `func` at execution time.</span>
-</span><span id="for_each-257"><a href="#for_each-257"><span class="linenos">257</span></a>
-</span><span id="for_each-258"><a href="#for_each-258"><span class="linenos">258</span></a><span class="sd">    `max_workers`: The maximum number of concurrent threads. If `None`, the max available to the system will be used.</span>
-</span><span id="for_each-259"><a href="#for_each-259"><span class="linenos">259</span></a>
-</span><span id="for_each-260"><a href="#for_each-260"><span class="linenos">260</span></a><span class="sd">    `show_progbar`: If `True`, print a progress bar to the terminal showing how many functions have finished executing.</span>
-</span><span id="for_each-261"><a href="#for_each-261"><span class="linenos">261</span></a>
-</span><span id="for_each-262"><a href="#for_each-262"><span class="linenos">262</span></a><span class="sd">    `description`: String or callable that takes no args and returns a string to display at the front of the progbar (will always include a runtime clock).</span>
-</span><span id="for_each-263"><a href="#for_each-263"><span class="linenos">263</span></a>
-</span><span id="for_each-264"><a href="#for_each-264"><span class="linenos">264</span></a><span class="sd">    `suffix`: String or callable that takes no args and returns a string to display after the progbar.</span>
-</span><span id="for_each-265"><a href="#for_each-265"><span class="linenos">265</span></a>
-</span><span id="for_each-266"><a href="#for_each-266"><span class="linenos">266</span></a><span class="sd">    `num_calls`: The number of times to call `func`. If `None` (default), `func` will be executed `max(len(args_list), len(kwargs_list))` times.</span>
-</span><span id="for_each-267"><a href="#for_each-267"><span class="linenos">267</span></a>
-</span><span id="for_each-268"><a href="#for_each-268"><span class="linenos">268</span></a><span class="sd">    #### e.g.</span>
-</span><span id="for_each-269"><a href="#for_each-269"><span class="linenos">269</span></a><span class="sd">    &gt;&gt;&gt; def f(t, m = 1):</span>
-</span><span id="for_each-270"><a href="#for_each-270"><span class="linenos">270</span></a><span class="sd">    &gt;&gt;&gt;     time.sleep(t * m)</span>
-</span><span id="for_each-271"><a href="#for_each-271"><span class="linenos">271</span></a><span class="sd">    &gt;&gt;&gt;     return t*m</span>
-</span><span id="for_each-272"><a href="#for_each-272"><span class="linenos">272</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(f, [(i) for i in range(10)], [{&quot;m&quot;: j*1.1} for j in range(10)])</span>
-</span><span id="for_each-273"><a href="#for_each-273"><span class="linenos">273</span></a>
-</span><span id="for_each-274"><a href="#for_each-274"><span class="linenos">274</span></a><span class="sd">    &gt;&gt;&gt; def f():</span>
-</span><span id="for_each-275"><a href="#for_each-275"><span class="linenos">275</span></a><span class="sd">    &gt;&gt;&gt;     time.sleep(random.random())</span>
-</span><span id="for_each-276"><a href="#for_each-276"><span class="linenos">276</span></a><span class="sd">    &gt;&gt;&gt; for_each(f, num_calls=10)</span>
-</span><span id="for_each-277"><a href="#for_each-277"><span class="linenos">277</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="for_each-278"><a href="#for_each-278"><span class="linenos">278</span></a>    <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_calls</span> <span class="k">if</span> <span class="n">num_calls</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs_list</span><span class="p">)))</span>
-</span><span id="for_each-279"><a href="#for_each-279"><span class="linenos">279</span></a>    <span class="n">pool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">args_list</span><span class="p">,</span> <span class="n">kwargs_list</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">)</span>
-</span><span id="for_each-280"><a href="#for_each-280"><span class="linenos">280</span></a>    <span class="k">return</span> <span class="n">pool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">show_progbar</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="for_each-267"><a href="#for_each-267"><span class="linenos">267</span></a><span class="k">def</span> <span class="nf">for_each</span><span class="p">(</span>
+</span><span id="for_each-268"><a href="#for_each-268"><span class="linenos">268</span></a>    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+</span><span id="for_each-269"><a href="#for_each-269"><span class="linenos">269</span></a>    <span class="n">args_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
+</span><span id="for_each-270"><a href="#for_each-270"><span class="linenos">270</span></a>    <span class="n">kwargs_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
+</span><span id="for_each-271"><a href="#for_each-271"><span class="linenos">271</span></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="for_each-272"><a href="#for_each-272"><span class="linenos">272</span></a>    <span class="n">show_progbar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="for_each-273"><a href="#for_each-273"><span class="linenos">273</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="for_each-274"><a href="#for_each-274"><span class="linenos">274</span></a>    <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="for_each-275"><a href="#for_each-275"><span class="linenos">275</span></a>    <span class="n">num_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="for_each-276"><a href="#for_each-276"><span class="linenos">276</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+</span><span id="for_each-277"><a href="#for_each-277"><span class="linenos">277</span></a>    <span class="sd">&quot;&quot;&quot;Multithread calls to `func` for each pair of `args_list` and `kwargs_list` tuples and return the results.</span>
+</span><span id="for_each-278"><a href="#for_each-278"><span class="linenos">278</span></a>
+</span><span id="for_each-279"><a href="#for_each-279"><span class="linenos">279</span></a><span class="sd">    #### params</span>
+</span><span id="for_each-280"><a href="#for_each-280"><span class="linenos">280</span></a>
+</span><span id="for_each-281"><a href="#for_each-281"><span class="linenos">281</span></a><span class="sd">    `func`: The function to execute on each pair of `args_list` and `kwargs_list` tuples.</span>
+</span><span id="for_each-282"><a href="#for_each-282"><span class="linenos">282</span></a>
+</span><span id="for_each-283"><a href="#for_each-283"><span class="linenos">283</span></a><span class="sd">    `args_list`: A list of tuples where each tuple consists of positional arguments to be passed to call to `func` at execution time.</span>
+</span><span id="for_each-284"><a href="#for_each-284"><span class="linenos">284</span></a>
+</span><span id="for_each-285"><a href="#for_each-285"><span class="linenos">285</span></a><span class="sd">    `kwargs_list`: A list of dictionaries where each dictionary consists of keyword arguments to be passed to call to `func` at execution time.</span>
+</span><span id="for_each-286"><a href="#for_each-286"><span class="linenos">286</span></a>
+</span><span id="for_each-287"><a href="#for_each-287"><span class="linenos">287</span></a><span class="sd">    `max_workers`: The maximum number of concurrent threads. If `None`, the max available to the system will be used.</span>
+</span><span id="for_each-288"><a href="#for_each-288"><span class="linenos">288</span></a>
+</span><span id="for_each-289"><a href="#for_each-289"><span class="linenos">289</span></a><span class="sd">    `show_progbar`: If `True`, print a progress bar to the terminal showing how many functions have finished executing.</span>
+</span><span id="for_each-290"><a href="#for_each-290"><span class="linenos">290</span></a>
+</span><span id="for_each-291"><a href="#for_each-291"><span class="linenos">291</span></a><span class="sd">    `description`: String or callable that takes no args and returns a string to display at the front of the progbar (will always include a runtime clock).</span>
+</span><span id="for_each-292"><a href="#for_each-292"><span class="linenos">292</span></a>
+</span><span id="for_each-293"><a href="#for_each-293"><span class="linenos">293</span></a><span class="sd">    `suffix`: String or callable that takes no args and returns a string to display after the progbar.</span>
+</span><span id="for_each-294"><a href="#for_each-294"><span class="linenos">294</span></a>
+</span><span id="for_each-295"><a href="#for_each-295"><span class="linenos">295</span></a><span class="sd">    `num_calls`: The number of times to call `func`. If `None` (default), `func` will be executed `max(len(args_list), len(kwargs_list))` times.</span>
+</span><span id="for_each-296"><a href="#for_each-296"><span class="linenos">296</span></a>
+</span><span id="for_each-297"><a href="#for_each-297"><span class="linenos">297</span></a><span class="sd">    #### e.g.</span>
+</span><span id="for_each-298"><a href="#for_each-298"><span class="linenos">298</span></a><span class="sd">    &gt;&gt;&gt; def f(t, m = 1):</span>
+</span><span id="for_each-299"><a href="#for_each-299"><span class="linenos">299</span></a><span class="sd">    &gt;&gt;&gt;     time.sleep(t * m)</span>
+</span><span id="for_each-300"><a href="#for_each-300"><span class="linenos">300</span></a><span class="sd">    &gt;&gt;&gt;     return t*m</span>
+</span><span id="for_each-301"><a href="#for_each-301"><span class="linenos">301</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(f, [(i) for i in range(10)], [{&quot;m&quot;: j*1.1} for j in range(10)])</span>
+</span><span id="for_each-302"><a href="#for_each-302"><span class="linenos">302</span></a>
+</span><span id="for_each-303"><a href="#for_each-303"><span class="linenos">303</span></a><span class="sd">    &gt;&gt;&gt; def f():</span>
+</span><span id="for_each-304"><a href="#for_each-304"><span class="linenos">304</span></a><span class="sd">    &gt;&gt;&gt;     time.sleep(random.random())</span>
+</span><span id="for_each-305"><a href="#for_each-305"><span class="linenos">305</span></a><span class="sd">    &gt;&gt;&gt; for_each(f, num_calls=10)</span>
+</span><span id="for_each-306"><a href="#for_each-306"><span class="linenos">306</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="for_each-307"><a href="#for_each-307"><span class="linenos">307</span></a>    <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_calls</span> <span class="k">if</span> <span class="n">num_calls</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs_list</span><span class="p">)))</span>
+</span><span id="for_each-308"><a href="#for_each-308"><span class="linenos">308</span></a>    <span class="n">pool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">args_list</span><span class="p">,</span> <span class="n">kwargs_list</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">)</span>
+</span><span id="for_each-309"><a href="#for_each-309"><span class="linenos">309</span></a>    <span class="k">return</span> <span class="n">pool</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">show_progbar</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -328,29 +345,29 @@ print out an optional <code>message</code> (a runtime clock will be appended to 
 
     </div>
     <a class="headerlink" href="#to_args_list"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="to_args_list-13"><a href="#to_args_list-13"><span class="linenos">13</span></a><span class="k">def</span> <span class="nf">to_args_list</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
-</span><span id="to_args_list-14"><a href="#to_args_list-14"><span class="linenos">14</span></a>    <span class="sd">&quot;&quot;&quot;Convert a sequence of elements to a list of tuples where each tuple contains one element for the sequence.</span>
-</span><span id="to_args_list-15"><a href="#to_args_list-15"><span class="linenos">15</span></a>
-</span><span id="to_args_list-16"><a href="#to_args_list-16"><span class="linenos">16</span></a><span class="sd">    Makes for easier to read calls to `quickpool` functions for the common case of single-input functions where you have a 1-dimensional sequence.</span>
-</span><span id="to_args_list-17"><a href="#to_args_list-17"><span class="linenos">17</span></a>
-</span><span id="to_args_list-18"><a href="#to_args_list-18"><span class="linenos">18</span></a><span class="sd">    &gt;&gt;&gt; items:list[str] = foo.get_all_items()</span>
-</span><span id="to_args_list-19"><a href="#to_args_list-19"><span class="linenos">19</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, to_args_list(items))</span>
-</span><span id="to_args_list-20"><a href="#to_args_list-20"><span class="linenos">20</span></a>
-</span><span id="to_args_list-21"><a href="#to_args_list-21"><span class="linenos">21</span></a><span class="sd">    instead of</span>
-</span><span id="to_args_list-22"><a href="#to_args_list-22"><span class="linenos">22</span></a>
-</span><span id="to_args_list-23"><a href="#to_args_list-23"><span class="linenos">23</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, [(item,) for item in items]))</span>
-</span><span id="to_args_list-24"><a href="#to_args_list-24"><span class="linenos">24</span></a>
-</span><span id="to_args_list-25"><a href="#to_args_list-25"><span class="linenos">25</span></a><span class="sd">    works with generators too:</span>
-</span><span id="to_args_list-26"><a href="#to_args_list-26"><span class="linenos">26</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, to_args_list(range(10)))</span>
-</span><span id="to_args_list-27"><a href="#to_args_list-27"><span class="linenos">27</span></a>
-</span><span id="to_args_list-28"><a href="#to_args_list-28"><span class="linenos">28</span></a><span class="sd">    instead of</span>
-</span><span id="to_args_list-29"><a href="#to_args_list-29"><span class="linenos">29</span></a>
-</span><span id="to_args_list-30"><a href="#to_args_list-30"><span class="linenos">30</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, [(i,) for i in range(10)])&quot;&quot;&quot;</span>
-</span><span id="to_args_list-31"><a href="#to_args_list-31"><span class="linenos">31</span></a>    <span class="k">return</span> <span class="p">[(</span><span class="n">arg</span><span class="p">,)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="to_args_list-14"><a href="#to_args_list-14"><span class="linenos">14</span></a><span class="k">def</span> <span class="nf">to_args_list</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+</span><span id="to_args_list-15"><a href="#to_args_list-15"><span class="linenos">15</span></a>    <span class="sd">&quot;&quot;&quot;Convert a sequence of elements to a list of tuples where each tuple contains one element from the sequence.</span>
+</span><span id="to_args_list-16"><a href="#to_args_list-16"><span class="linenos">16</span></a>
+</span><span id="to_args_list-17"><a href="#to_args_list-17"><span class="linenos">17</span></a><span class="sd">    Makes for easier to read calls to `quickpool` functions for the common case of single-input functions where you have a 1-dimensional sequence.</span>
+</span><span id="to_args_list-18"><a href="#to_args_list-18"><span class="linenos">18</span></a>
+</span><span id="to_args_list-19"><a href="#to_args_list-19"><span class="linenos">19</span></a><span class="sd">    &gt;&gt;&gt; items:list[str] = foo.get_all_items()</span>
+</span><span id="to_args_list-20"><a href="#to_args_list-20"><span class="linenos">20</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, to_args_list(items))</span>
+</span><span id="to_args_list-21"><a href="#to_args_list-21"><span class="linenos">21</span></a>
+</span><span id="to_args_list-22"><a href="#to_args_list-22"><span class="linenos">22</span></a><span class="sd">    instead of</span>
+</span><span id="to_args_list-23"><a href="#to_args_list-23"><span class="linenos">23</span></a>
+</span><span id="to_args_list-24"><a href="#to_args_list-24"><span class="linenos">24</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, [(item,) for item in items]))</span>
+</span><span id="to_args_list-25"><a href="#to_args_list-25"><span class="linenos">25</span></a>
+</span><span id="to_args_list-26"><a href="#to_args_list-26"><span class="linenos">26</span></a><span class="sd">    works with generators too:</span>
+</span><span id="to_args_list-27"><a href="#to_args_list-27"><span class="linenos">27</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, to_args_list(range(10)))</span>
+</span><span id="to_args_list-28"><a href="#to_args_list-28"><span class="linenos">28</span></a>
+</span><span id="to_args_list-29"><a href="#to_args_list-29"><span class="linenos">29</span></a><span class="sd">    instead of</span>
+</span><span id="to_args_list-30"><a href="#to_args_list-30"><span class="linenos">30</span></a>
+</span><span id="to_args_list-31"><a href="#to_args_list-31"><span class="linenos">31</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(bar, [(i,) for i in range(10)])&quot;&quot;&quot;</span>
+</span><span id="to_args_list-32"><a href="#to_args_list-32"><span class="linenos">32</span></a>    <span class="k">return</span> <span class="p">[(</span><span class="n">arg</span><span class="p">,)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Convert a sequence of elements to a list of tuples where each tuple contains one element for the sequence.</p>
+            <div class="docstring"><p>Convert a sequence of elements to a list of tuples where each tuple contains one element from the sequence.</p>
 
 <p>Makes for easier to read calls to <code><a href="">quickpool</a></code> functions for the common case of single-input functions where you have a 1-dimensional sequence.</p>
 
@@ -378,6 +395,74 @@ print out an optional <code>message</code> (a runtime clock will be appended to 
 
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">for_each</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="p">[(</span><span class="n">i</span><span class="p">,)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
+</code></pre>
+</div>
+</div>
+
+
+                </section>
+                <section id="to_kwargs_list">
+                            <input id="to_kwargs_list-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">to_kwargs_list</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>,</span><span class="param">	<span class="n">length</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">deep_copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>:</span></span>
+
+                <label class="view-source-button" for="to_kwargs_list-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#to_kwargs_list"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="to_kwargs_list-35"><a href="#to_kwargs_list-35"><span class="linenos">35</span></a><span class="k">def</span> <span class="nf">to_kwargs_list</span><span class="p">(</span>
+</span><span id="to_kwargs_list-36"><a href="#to_kwargs_list-36"><span class="linenos">36</span></a>    <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">deep_copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="to_kwargs_list-37"><a href="#to_kwargs_list-37"><span class="linenos">37</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+</span><span id="to_kwargs_list-38"><a href="#to_kwargs_list-38"><span class="linenos">38</span></a>    <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="to_kwargs_list-39"><a href="#to_kwargs_list-39"><span class="linenos">39</span></a><span class="sd">    Create a list of dictionaries from a single dictionary.</span>
+</span><span id="to_kwargs_list-40"><a href="#to_kwargs_list-40"><span class="linenos">40</span></a>
+</span><span id="to_kwargs_list-41"><a href="#to_kwargs_list-41"><span class="linenos">41</span></a><span class="sd">    Args:</span>
+</span><span id="to_kwargs_list-42"><a href="#to_kwargs_list-42"><span class="linenos">42</span></a><span class="sd">        kwargs (dict[Any, Any]): The dictionary to make a list</span>
+</span><span id="to_kwargs_list-43"><a href="#to_kwargs_list-43"><span class="linenos">43</span></a><span class="sd">        length (int): The number of copies of `kwargs`</span>
+</span><span id="to_kwargs_list-44"><a href="#to_kwargs_list-44"><span class="linenos">44</span></a><span class="sd">        deep_copy (bool, optional): Whether the copies should be deep or shallow.</span>
+</span><span id="to_kwargs_list-45"><a href="#to_kwargs_list-45"><span class="linenos">45</span></a><span class="sd">        When `False`, modifying one element of the returned list will modify all elements.</span>
+</span><span id="to_kwargs_list-46"><a href="#to_kwargs_list-46"><span class="linenos">46</span></a><span class="sd">        Defaults to False.</span>
+</span><span id="to_kwargs_list-47"><a href="#to_kwargs_list-47"><span class="linenos">47</span></a>
+</span><span id="to_kwargs_list-48"><a href="#to_kwargs_list-48"><span class="linenos">48</span></a><span class="sd">    Returns:</span>
+</span><span id="to_kwargs_list-49"><a href="#to_kwargs_list-49"><span class="linenos">49</span></a><span class="sd">        list[dict[Any, Any]]: A list of size `length` containing copies of `kwargs`.</span>
+</span><span id="to_kwargs_list-50"><a href="#to_kwargs_list-50"><span class="linenos">50</span></a>
+</span><span id="to_kwargs_list-51"><a href="#to_kwargs_list-51"><span class="linenos">51</span></a><span class="sd">    &gt;&gt;&gt; kwargs = {&quot;a&quot;: 1, &quot;b&quot;: 2}</span>
+</span><span id="to_kwargs_list-52"><a href="#to_kwargs_list-52"><span class="linenos">52</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(foo, kwargs_list=to_kwargs_list(kwargs, 10))</span>
+</span><span id="to_kwargs_list-53"><a href="#to_kwargs_list-53"><span class="linenos">53</span></a>
+</span><span id="to_kwargs_list-54"><a href="#to_kwargs_list-54"><span class="linenos">54</span></a><span class="sd">    instead of</span>
+</span><span id="to_kwargs_list-55"><a href="#to_kwargs_list-55"><span class="linenos">55</span></a>
+</span><span id="to_kwargs_list-56"><a href="#to_kwargs_list-56"><span class="linenos">56</span></a><span class="sd">    &gt;&gt;&gt; results = for_each(foo, kwargs_list=[kwargs for _ in range(10)])</span>
+</span><span id="to_kwargs_list-57"><a href="#to_kwargs_list-57"><span class="linenos">57</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="to_kwargs_list-58"><a href="#to_kwargs_list-58"><span class="linenos">58</span></a>    <span class="k">if</span> <span class="n">deep_copy</span><span class="p">:</span>
+</span><span id="to_kwargs_list-59"><a href="#to_kwargs_list-59"><span class="linenos">59</span></a>        <span class="k">return</span> <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)]</span>
+</span><span id="to_kwargs_list-60"><a href="#to_kwargs_list-60"><span class="linenos">60</span></a>    <span class="k">return</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">]</span> <span class="o">*</span> <span class="n">length</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Create a list of dictionaries from a single dictionary.</p>
+
+<p>Args:
+    kwargs (dict[Any, Any]): The dictionary to make a list
+    length (int): The number of copies of <code>kwargs</code>
+    deep_copy (bool, optional): Whether the copies should be deep or shallow.
+    When <code>False</code>, modifying one element of the returned list will modify all elements.
+    Defaults to False.</p>
+
+<p>Returns:
+    list[dict[Any, Any]]: A list of size <code>length</code> containing copies of <code>kwargs</code>.</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">for_each</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">kwargs_list</span><span class="o">=</span><span class="n">to_kwargs_list</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>instead of</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">for_each</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">kwargs_list</span><span class="o">=</span><span class="p">[</span><span class="n">kwargs</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
 </code></pre>
 </div>
 </div>
