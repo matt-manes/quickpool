@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.0 (2025-06-19)
+
+#### New Features
+
+* add `to_kwargs_list()` convenience function
+
 ## v2.1.0 (2025-05-15)
 
 #### New Features
