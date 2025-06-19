@@ -1,3 +1,4 @@
+import copy
 import time
 from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 from typing import Any, Callable, Sequence
@@ -10,7 +11,7 @@ Submission = tuple[Callable[..., Any], Sequence[Any], dict[str, Any]]
 
 
 def to_args_list(args: Sequence[Any]) -> list[tuple[Any, ...]]:
-    """Convert a sequence of elements to a list of tuples where each tuple contains one element for the sequence.
+    """Convert a sequence of elements to a list of tuples where each tuple contains one element from the sequence.
 
     Makes for easier to read calls to `quickpool` functions for the common case of single-input functions where you have a 1-dimensional sequence.
 
@@ -28,6 +29,34 @@ def to_args_list(args: Sequence[Any]) -> list[tuple[Any, ...]]:
 
     >>> results = for_each(bar, [(i,) for i in range(10)])"""
     return [(arg,) for arg in args]
+
+
+def to_kwargs_list(
+    kwargs: dict[Any, Any], length: int, deep_copy: bool = False
+) -> list[dict[Any, Any]]:
+    """
+    Create a list of dictionaries from a single dictionary.
+
+    Args:
+        kwargs (dict[Any, Any]): The dictionary to make a list
+        length (int): The number of copies of `kwargs`
+        deep_copy (bool, optional): Whether the copies should be deep or shallow.
+        When `False`, modifying one element of the returned list will modify all elements.
+        Defaults to False.
+
+    Returns:
+        list[dict[Any, Any]]: A list of size `length` containing copies of `kwargs`.
+
+    >>> kwargs = {"a": 1, "b": 2}
+    >>> results = for_each(foo, kwargs_list=to_kwargs_list(kwargs, 10))
+
+    instead of
+
+    >>> results = for_each(foo, kwargs_list=[kwargs for _ in range(10)])
+    """
+    if deep_copy:
+        return [copy.deepcopy(kwargs) for _ in range(length)]
+    return [kwargs] * length
 
 
 class _QuickPool:
@@ -218,9 +247,7 @@ def update_and_wait(
     spinner_style = "deep_pink1"
     console = Console()
     timer = Timer(subsecond_resolution=False).start()
-    update_message: Callable[
-        [], str
-    ] = (
+    update_message: Callable[[], str] = (
         lambda: f"{str(message()) if isinstance(message, Callable) else message} | {timer.elapsed_str}".strip()
     )
     with console.status(

@@ -6,8 +6,7 @@ from quickpool import quickpool
 
 
 def test___get_prepared_submissions():
-    def dummy(*args: Any, **kwargs: Any):
-        ...
+    def dummy(*args: Any, **kwargs: Any): ...
 
     num = 5
     pool = quickpool._QuickPool(  # type: ignore
@@ -79,9 +78,7 @@ def test__thread_pool_all_workers_kwargs():
 
 def test__thread_pool_dynamic_prefix():
     pool = get_threadpool_args(500)
-    description: Callable[
-        [], str
-    ] = (
+    description: Callable[[], str] = (
         lambda: f"Finished workers: {pool.get_num_finished_wokers()}|-|{pool.get_num_unfinished_workers()}"
     )
     print()
@@ -158,6 +155,44 @@ def test__toargs_list():
     results = quickpool.for_each(f, quickpool.to_args_list(range(10)))
     assert results == list(range(10))
     assert results == quickpool.for_each(f, [(i,) for i in range(10)])
+
+
+def test__tokwargs_list_shallow():
+    def f(num: int = 1) -> int:
+        time.sleep(random.random())
+        return num
+
+    length = 10
+    kwargs = {"num": 1}
+    results = quickpool.for_each(
+        f, kwargs_list=quickpool.to_kwargs_list(kwargs, length)
+    )
+    assert results == [kwargs["num"]] * length
+    kwargs_list = quickpool.to_kwargs_list(kwargs, length)
+    # Should change every element in list
+    kwargs_list[0]["num"] = 2
+    assert [kwargs_list[0]["num"]] * length == quickpool.for_each(
+        f, kwargs_list=kwargs_list
+    )
+
+
+def test__tokwargs_list_deep():
+    def f(num: int = 1) -> int:
+        time.sleep(random.random())
+        return num
+
+    length = 10
+    kwargs = {"num": 1}
+    results = quickpool.for_each(
+        f, kwargs_list=quickpool.to_kwargs_list(kwargs, length, True)
+    )
+    assert results == [kwargs["num"]] * length
+    kwargs_list = quickpool.to_kwargs_list(kwargs, length, True)
+    # Only the first element should change
+    kwargs_list[0]["num"] = 2
+    results = quickpool.for_each(f, kwargs_list=kwargs_list)
+    assert [kwargs_list[0]["num"]] * length != results
+    assert results[0] == kwargs_list[0]["num"]
 
 
 def main():
